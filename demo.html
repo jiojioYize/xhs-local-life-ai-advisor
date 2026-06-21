@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>小红书本地推 AI 参谋 Demo</title>
+  <title>小红书本地推 AI 参谋</title>
   <style>
     * { box-sizing: border-box; }
     :root {
@@ -345,13 +345,13 @@
 </head>
 <body>
   <header>
-    <span class="kicker">轻交互 MVP / 小红书本地生活 / 机会验证</span>
+    <span class="kicker">今日诊断 / 小红书本地生活</span>
     <h1>小红书本地推 AI 参谋</h1>
-    <p class="sub">选择一个本地生活商家场景，查看一套可以直接拿去试的“套餐诊断 + 内容样片 + 核销提升 + ROI 复盘”方案。</p>
+    <p class="sub">选中与你相似的门店情况，先看问题出在哪里，再拿到一套今天就能试的套餐、内容、核销和复盘动作。</p>
   </header>
 
   <main>
-    <nav class="tabs" aria-label="商家案例">
+    <nav class="tabs" aria-label="门店场景">
       <button class="tab" data-case="coffee" aria-selected="true"><b>校园咖啡甜品</b><span>核销低、加购少、担心不复购</span></button>
       <button class="tab" data-case="nail" aria-selected="false"><b>美甲新店</b><span>低价体验客多，但复购和升单弱</span></button>
       <button class="tab" data-case="meal" aria-selected="false"><b>社区轻餐饮</b><span>套餐卖得动，但午晚高峰承接差</span></button>
@@ -359,7 +359,7 @@
 
     <section class="dashboard">
       <aside class="panel">
-        <h2>商家输入</h2>
+        <h2>门店信息</h2>
         <div class="form">
           <label>店铺类型
             <input id="storeType" readonly>
@@ -396,7 +396,7 @@
           <div class="card"><strong>套餐诊断</strong><p id="diagnosis"></p></div>
           <div class="card"><strong>套餐改造</strong><p id="packageFix"></p></div>
           <div class="card"><strong>核销提升</strong><p id="redeemFix"></p></div>
-          <div class="card"><strong>复盘判断</strong><p id="reviewLogic"></p></div>
+          <div class="card"><strong>现在该看什么</strong><p id="reviewLogic"></p></div>
         </div>
 
         <div class="decision">
@@ -423,20 +423,20 @@
         </div>
 
         <article class="panel workflow">
-          <h3>Prompt 流程</h3>
+          <h3>本次诊断流程</h3>
           <div class="steps">
             <div class="step"><b>1 店铺信息</b>识别品类、商圈、人群和经营目标。</div>
             <div class="step"><b>2 套餐诊断</b>判断低价、特色、加购和复购设计。</div>
-            <div class="step"><b>3 内容生成</b>输出标题、脚本、镜头和正文。</div>
+            <div class="step"><b>3 内容方案</b>准备标题、脚本、镜头和正文。</div>
             <div class="step"><b>4 核销策略</b>设计到店话术、升级项和二次券。</div>
-            <div class="step"><b>5 ROI 复盘</b>用曝光、咨询、核销、加购综合判断。</div>
+            <div class="step"><b>5 投放复盘</b>用曝光、咨询、核销、加购综合判断。</div>
             <div class="step"><b>6 下一步</b>继续投、改套餐、换内容角度或暂停。</div>
           </div>
         </article>
       </section>
     </section>
 
-    <footer>说明：当前 Demo 是轻交互静态 MVP，不连接真实 AI API，不承诺爆单；目标是让商家判断这套“诊断 + 内容 + 复盘”是否值得拿去执行和继续付费验证。</footer>
+    <footer>提醒：本参谋不承诺爆单，建议先小范围试 3 天，再用核销、加购和复购券领取情况决定是否继续投。</footer>
   </main>
 
   <script>
@@ -447,7 +447,7 @@
         offer: "19.9 元单人咖啡甜品套餐：任选中杯拿铁 + 小蛋糕。当前核销低，到店后加购少。",
         problem: "想用最小成本引流，但担心低价套餐只吸引薅羊毛用户，不能带来复购。",
         metrics: ["8,200", "260", "31", "6"],
-        hypothesis: "MVP 假设：商家不是缺一个文案工具，而是缺一套能解释“为什么核销低、下一步改哪里”的经营参谋。",
+        hypothesis: "经营提醒：你现在先别急着加预算，重点是判断核销低到底卡在套餐利益点、到店承接，还是复购设计。",
         diagnosis: "单人低价套餐降低了首次决策成本，但缺少同伴场景和加购钩子，容易只带来一次性用户。",
         packageFix: "改为 2 人复习搭子套餐：饮品 2 杯 + 甜品 1 份 + 到店加购券，降低“只薅一次”的风险。",
         redeemFix: "到店话术从“核销套餐”改为“今天第二杯半价，适合带回宿舍/图书馆”。",
@@ -478,7 +478,7 @@
         offer: "39.9 元单色美甲体验套餐。预约量不错，但用户到店后很少升级款式，也很少二次预约。",
         problem: "想用低价体验吸引新客，但担心用户只做一次基础款，后续没有复购价值。",
         metrics: ["5,600", "190", "44", "8"],
-        hypothesis: "MVP 假设：美甲店低价体验的关键不是更便宜，而是让用户在预约前就理解“基础款”和“升级款”的差别。",
+        hypothesis: "经营提醒：低价体验不是越便宜越好，先让用户在预约前看懂基础款和升级款的差别。",
         diagnosis: "低价单色套餐决策简单，但没有把设计能力、风格案例和升级理由讲清楚，到店后升单弱。",
         packageFix: "改为“通勤显白体验款 + 到店款式升级券”：基础款保留低门槛，首图展示 3 个可升级风格。",
         redeemFix: "预约确认时发送款式选择图；到店话术从“要不要升级”改为“你的手型更适合这两种显白方案”。",
@@ -509,7 +509,7 @@
         offer: "29.9 元双人粉面套餐：两碗招牌粉 + 小吃一份。套餐销量不错，但高峰期排队影响体验。",
         problem: "想继续做团购引流，但担心高峰期承接不了，差评影响后续自然流量。",
         metrics: ["9,400", "310", "86", "18"],
-        hypothesis: "MVP 假设：轻餐饮的复盘不能只看核销和营业额，还要看履约能力，否则流量越多越容易伤害口碑。",
+        hypothesis: "经营提醒：轻餐饮不能只看核销和营业额，也要看出餐、等位和差评，否则流量越多越容易伤害口碑。",
         diagnosis: "套餐本身能带动核销，但没有分流高峰时段，也没有把加购点设计成低压力品类。",
         packageFix: "改为“错峰双人套餐 + 晚市加购小吃券”：限制核销时段，保护高峰体验。",
         redeemFix: "评论区和详情页明确错峰可用；到店推荐饮品/小吃，不推荐制作慢的菜品。",
