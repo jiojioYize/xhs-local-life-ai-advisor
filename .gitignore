@@ -2,6 +2,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+submission/
+output/
 output/pdf/xhs_local_life_ai_onepager.pdf
 output/pdf/xhs_local_life_ai_onepager_preview.png
 docs/assets/xhs_local_life_ai_onepager.pdf
