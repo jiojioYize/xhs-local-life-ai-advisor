@@ -11,6 +11,7 @@
       --muted: #66736d;
       --line: #d9e3dd;
       --paper: #fbfaf7;
+      --panel: #ffffff;
       --green: #12664f;
       --green-soft: #e3f4eb;
       --rose: #e74767;
@@ -34,7 +35,7 @@
       border-bottom: 1px solid var(--line);
       background:
         linear-gradient(110deg, rgba(227, 244, 235, 0.9), transparent 56%),
-        linear-gradient(180deg, rgba(255, 231, 237, 0.75), transparent 64%);
+        linear-gradient(180deg, rgba(255, 231, 237, 0.7), transparent 64%);
     }
 
     .kicker {
@@ -43,7 +44,7 @@
       border: 1px solid rgba(18, 102, 79, 0.25);
       border-radius: 999px;
       color: var(--green);
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.74);
       font-size: 13px;
       font-weight: 700;
     }
@@ -63,9 +64,7 @@
       font-size: 16px;
     }
 
-    main {
-      padding: 24px 40px 42px;
-    }
+    main { padding: 24px 40px 42px; }
 
     .tabs {
       display: grid;
@@ -80,14 +79,14 @@
       border: 1px solid var(--line);
       border-radius: 8px;
       color: var(--ink);
-      background: #fff;
+      background: var(--panel);
       text-align: left;
       cursor: pointer;
       font: inherit;
     }
 
     .tab[aria-selected="true"] {
-      border-color: rgba(18, 102, 79, 0.4);
+      border-color: rgba(18, 102, 79, 0.42);
       background: var(--green-soft);
       box-shadow: 0 8px 22px rgba(18, 102, 79, 0.1);
     }
@@ -106,7 +105,7 @@
 
     .dashboard {
       display: grid;
-      grid-template-columns: 360px minmax(0, 1fr);
+      grid-template-columns: 380px minmax(0, 1fr);
       gap: 20px;
       align-items: start;
     }
@@ -114,11 +113,11 @@
     .panel {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.9);
       box-shadow: 0 10px 28px rgba(23, 32, 28, 0.06);
     }
 
-    .panel h2 {
+    .panel h2, .panel h3 {
       margin: 0;
       padding: 16px 18px 12px;
       border-bottom: 1px solid var(--line);
@@ -150,12 +149,42 @@
       font-size: 14px;
     }
 
-    textarea { min-height: 78px; resize: vertical; }
+    textarea { min-height: 80px; resize: vertical; }
+    input:focus, textarea:focus {
+      outline: 2px solid rgba(18, 102, 79, 0.18);
+      border-color: rgba(18, 102, 79, 0.55);
+    }
 
     .metrics {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .primary, .secondary {
+      min-height: 42px;
+      border-radius: 6px;
+      border: 1px solid rgba(18, 102, 79, 0.36);
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .primary {
+      color: #fff;
+      background: var(--green);
+    }
+
+    .secondary {
+      color: var(--green);
+      background: #fff;
     }
 
     .hint {
@@ -170,6 +199,19 @@
       display: grid;
       gap: 16px;
     }
+
+    .status {
+      display: none;
+      padding: 14px 16px;
+      border: 1px solid rgba(44, 90, 138, 0.2);
+      border-radius: 8px;
+      color: #234a71;
+      background: var(--blue-soft);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .status.is-visible { display: block; }
 
     .cards {
       display: grid;
@@ -198,15 +240,9 @@
       font-size: 13px;
     }
 
-    .wide {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 16px;
-    }
-
     .decision {
       display: grid;
-      grid-template-columns: 180px 1fr 1fr;
+      grid-template-columns: 190px 1fr 1fr;
       gap: 12px;
       padding: 16px 18px;
       border: 1px solid rgba(18, 102, 79, 0.24);
@@ -233,12 +269,20 @@
       font-size: 13px;
     }
 
-    .script {
+    .wide {
+      display: grid;
+      grid-template-columns: 1.06fr 0.94fr;
+      gap: 16px;
+    }
+
+    .script, .table, .reasoning, .todo, .workflow {
       padding: 18px;
     }
 
-    .script h3, .table h3, .workflow h3 {
+    .script h3, .table h3, .reasoning h3, .todo h3, .workflow h3 {
       margin: 0 0 10px;
+      padding: 0;
+      border: 0;
       font-size: 18px;
     }
 
@@ -256,13 +300,13 @@
       font-size: 14px;
     }
 
-    .shots {
+    .shots, .bullets {
       display: grid;
       gap: 8px;
       margin-top: 10px;
     }
 
-    .shot {
+    .shot, .bullet {
       display: grid;
       grid-template-columns: 78px 1fr;
       gap: 10px;
@@ -273,12 +317,10 @@
       font-size: 13px;
     }
 
-    .shot b { color: var(--green); }
+    .bullet { grid-template-columns: 28px 1fr; }
+    .shot b, .bullet b { color: var(--green); }
 
-    .table {
-      padding: 18px;
-      background: var(--gold-soft);
-    }
+    .table { background: var(--gold-soft); }
 
     table {
       width: 100%;
@@ -301,10 +343,9 @@
       background: #fff8eb;
     }
 
-    .workflow {
-      padding: 18px;
-      background: var(--blue-soft);
-    }
+    .reasoning { background: #fff; }
+    .todo { background: var(--green-soft); }
+    .workflow { background: var(--blue-soft); }
 
     .steps {
       display: grid;
@@ -334,12 +375,17 @@
       font-size: 13px;
     }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1080px) {
       header, main { padding-left: 18px; padding-right: 18px; }
       .tabs, .dashboard, .wide { grid-template-columns: 1fr; }
       .cards { grid-template-columns: 1fr 1fr; }
       .steps { grid-template-columns: 1fr 1fr; }
       .decision { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 32px; }
+      .cards, .metrics, .actions { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -347,7 +393,7 @@
   <header>
     <span class="kicker">今日诊断 / 小红书本地生活</span>
     <h1>小红书本地推 AI 参谋</h1>
-    <p class="sub">选中与你相似的门店情况，先看问题出在哪里，再拿到一套今天就能试的套餐、内容、核销和复盘动作。</p>
+    <p class="sub">填入你的门店情况，先看问题出在哪里，再拿到一套今天就能试的套餐、内容、核销和复盘动作。</p>
   </header>
 
   <main>
@@ -360,38 +406,44 @@
     <section class="dashboard">
       <aside class="panel">
         <h2>门店信息</h2>
-        <div class="form">
+        <form class="form" id="advisorForm">
           <label>店铺类型
-            <input id="storeType" readonly>
+            <input id="storeType" autocomplete="off">
           </label>
           <label>城市 / 商圈
-            <input id="location" readonly>
+            <input id="location" autocomplete="off">
           </label>
           <label>主推套餐
-            <textarea id="offer" readonly></textarea>
+            <textarea id="offer"></textarea>
           </label>
           <label>当前困惑
-            <textarea id="problem" readonly></textarea>
+            <textarea id="problem"></textarea>
           </label>
           <div class="metrics">
             <label>曝光
-              <input id="exposure" readonly>
+              <input id="exposure" inputmode="numeric">
             </label>
             <label>咨询 / 收藏
-              <input id="interest" readonly>
+              <input id="interest" inputmode="numeric">
             </label>
             <label>核销
-              <input id="redeem" readonly>
+              <input id="redeem" inputmode="numeric">
             </label>
             <label>到店加购
-              <input id="upsell" readonly>
+              <input id="upsell" inputmode="numeric">
             </label>
           </div>
-          <div class="hint" id="hypothesis"></div>
-        </div>
+          <div class="actions">
+            <button class="primary" type="submit">生成诊断</button>
+            <button class="secondary" type="button" id="resetExample">恢复示例</button>
+          </div>
+          <div class="hint" id="hintText"></div>
+        </form>
       </aside>
 
       <section class="output">
+        <div class="status" id="statusText">正在分析套餐、核销和复购路径...</div>
+
         <div class="cards">
           <div class="card"><strong>套餐诊断</strong><p id="diagnosis"></p></div>
           <div class="card"><strong>套餐改造</strong><p id="packageFix"></p></div>
@@ -422,6 +474,18 @@
           </article>
         </div>
 
+        <div class="wide">
+          <article class="panel reasoning">
+            <h3>诊断依据</h3>
+            <div class="bullets" id="reasons"></div>
+          </article>
+
+          <article class="panel todo">
+            <h3>今天先做这 3 件事</h3>
+            <div class="bullets" id="actions"></div>
+          </article>
+        </div>
+
         <article class="panel workflow">
           <h3>本次诊断流程</h3>
           <div class="steps">
@@ -436,144 +500,329 @@
       </section>
     </section>
 
-    <footer>提醒：本参谋不承诺爆单，建议先小范围试 3 天，再用核销、加购和复购券领取情况决定是否继续投。</footer>
+    <footer>提醒：这是用于试跑思路的模拟诊断，不承诺爆单。建议先小范围试 3 天，再用核销、加购和复购券领取情况决定是否继续投。</footer>
   </main>
 
   <script>
-    const cases = {
+    const presetCases = {
       coffee: {
         storeType: "校园附近甜品 / 咖啡新店",
         location: "大学城，距离图书馆步行 6 分钟",
         offer: "19.9 元单人咖啡甜品套餐：任选中杯拿铁 + 小蛋糕。当前核销低，到店后加购少。",
         problem: "想用最小成本引流，但担心低价套餐只吸引薅羊毛用户，不能带来复购。",
-        metrics: ["8,200", "260", "31", "6"],
-        hypothesis: "经营提醒：你现在先别急着加预算，重点是判断核销低到底卡在套餐利益点、到店承接，还是复购设计。",
-        diagnosis: "单人低价套餐降低了首次决策成本，但缺少同伴场景和加购钩子，容易只带来一次性用户。",
-        packageFix: "改为 2 人复习搭子套餐：饮品 2 杯 + 甜品 1 份 + 到店加购券，降低“只薅一次”的风险。",
-        redeemFix: "到店话术从“核销套餐”改为“今天第二杯半价，适合带回宿舍/图书馆”。",
-        reviewLogic: "不要只看核销率；同时看收藏咨询、到店加购、复购券领取，判断是内容问题还是套餐问题。",
-        decision: {
-          action: "改套餐后继续小额投",
-          reason: "收藏/咨询仍有需求信号，但核销和加购弱，优先修正套餐利益点和到店承接。",
-          test: "用 2 人复习搭子套餐跑 3 天，重点看核销率、到店加购和复购券领取。"
-        },
-        title: "期末周人均 19.9 的咖啡甜品搭子套餐，真的适合学生党吗？",
-        body: "图书馆坐一下午最怕又困又饿。我们把单人低价套餐改成了“2 人复习搭子套餐”：两杯低糖咖啡 + 一份小蛋糕，适合下午 3 点一起续命。到店核销后可领第二次复习券，下次带同学来更划算。",
-        shots: [
-          ["0-3 秒", "图书馆门口：“期末周别再一个人硬撑了。”"],
-          ["3-8 秒", "两杯咖啡和甜品上桌，字幕强调“2 人分享”。"],
-          ["8-15 秒", "朋友边复习边吃甜品，突出步行 6 分钟、低糖、不腻。"],
-          ["15-20 秒", "评论区打“复习”，发你下次到店券领取方式。"]
-        ],
-        rows: [
-          ["曝光高，核销低", "标题/套餐利益点不清", "重写钩子，强化到店理由"],
-          ["核销高，加购低", "套餐太饱或话术弱", "改加购品类和店员话术"],
-          ["收藏高，咨询高", "内容有需求但转化弱", "补充限时券和评论区引导"],
-          ["加购和复购券低", "用户只为低价而来", "重做套餐或暂停投放"]
-        ]
+        exposure: "8200",
+        interest: "260",
+        redeem: "31",
+        upsell: "6"
       },
       nail: {
         storeType: "商场负一层美甲新店",
         location: "社区商场，周边有写字楼和居民区",
         offer: "39.9 元单色美甲体验套餐。预约量不错，但用户到店后很少升级款式，也很少二次预约。",
         problem: "想用低价体验吸引新客，但担心用户只做一次基础款，后续没有复购价值。",
-        metrics: ["5,600", "190", "44", "8"],
-        hypothesis: "经营提醒：低价体验不是越便宜越好，先让用户在预约前看懂基础款和升级款的差别。",
-        diagnosis: "低价单色套餐决策简单，但没有把设计能力、风格案例和升级理由讲清楚，到店后升单弱。",
-        packageFix: "改为“通勤显白体验款 + 到店款式升级券”：基础款保留低门槛，首图展示 3 个可升级风格。",
-        redeemFix: "预约确认时发送款式选择图；到店话术从“要不要升级”改为“你的手型更适合这两种显白方案”。",
-        reviewLogic: "如果预约不少但升单低，优先改款式表达和到店推荐；如果收藏高但预约低，补充可预约时间和距离信息。",
-        decision: {
-          action: "改内容首图和升单路径",
-          reason: "低价体验能带来预约，但用户对升级款价值感知弱，问题更可能在款式表达和到店推荐。",
-          test: "用 3 组显白款式图替换首图，并在预约确认时发送升级券，观察升单率。"
-        },
-        title: "商场负一层这家 39.9 美甲，适合第一次试店吗？",
-        body: "不是所有低价美甲都只能做最基础的单色。这家把 39.9 做成通勤显白体验款，到店前先看 3 组风格图，喜欢法式、猫眼或碎钻可以用升级券补差价。适合想试新店、但又怕踩雷的人。",
-        shots: [
-          ["0-3 秒", "展示素手和成品对比：“第一次试店，别只看价格。”"],
-          ["3-8 秒", "摆出 3 组显白款式卡：通勤、约会、拍照。"],
-          ["8-15 秒", "美甲师按手型推荐颜色，解释为什么适合。"],
-          ["15-20 秒", "评论区打“显白”，发你预约前款式参考图。"]
-        ],
-        rows: [
-          ["预约高，升单低", "低价套餐盖住设计能力", "首图展示升级款差异"],
-          ["收藏高，预约低", "到店路径和时间不清", "补距离、营业时间、预约方式"],
-          ["核销高，复购低", "缺少下次预约理由", "发 21 天补色/换款提醒"],
-          ["评论问价格多", "用户只感知便宜", "增加风格和手型适配内容"]
-        ]
+        exposure: "5600",
+        interest: "190",
+        redeem: "44",
+        upsell: "8"
       },
       meal: {
         storeType: "社区轻餐饮 / 粉面小店",
         location: "居民区门口，午晚高峰明显",
         offer: "29.9 元双人粉面套餐：两碗招牌粉 + 小吃一份。套餐销量不错，但高峰期排队影响体验。",
         problem: "想继续做团购引流，但担心高峰期承接不了，差评影响后续自然流量。",
-        metrics: ["9,400", "310", "86", "18"],
-        hypothesis: "经营提醒：轻餐饮不能只看核销和营业额，也要看出餐、等位和差评，否则流量越多越容易伤害口碑。",
-        diagnosis: "套餐本身能带动核销，但没有分流高峰时段，也没有把加购点设计成低压力品类。",
-        packageFix: "改为“错峰双人套餐 + 晚市加购小吃券”：限制核销时段，保护高峰体验。",
-        redeemFix: "评论区和详情页明确错峰可用；到店推荐饮品/小吃，不推荐制作慢的菜品。",
-        reviewLogic: "核销高不一定继续加投；如果差评、等位、出餐慢同步上升，要先优化承接能力。",
-        decision: {
-          action: "先限时段再继续投",
-          reason: "套餐能带动核销，但承接能力是风险点，继续放量可能带来差评和履约压力。",
-          test: "把核销限定到错峰时段，保留晚市加购券，观察差评、出餐速度和加购。"
-        },
-        title: "社区门口 29.9 双人粉面套餐，为什么建议错峰去？",
-        body: "这家小店的招牌粉确实适合两个人随便吃一顿，但午高峰排队会影响体验。更推荐下午 2 点后或晚市错峰核销，套餐里有两碗粉和小吃，到店还能用小吃券加一份凉拌菜。",
-        shots: [
-          ["0-3 秒", "门店外景和出餐口：“便宜套餐，也要看什么时候去。”"],
-          ["3-8 秒", "展示两碗招牌粉和小吃，标注错峰核销时间。"],
-          ["8-15 秒", "拍出餐速度和座位情况，强调社区店真实感。"],
-          ["15-20 秒", "评论区打“错峰”，发你核销时间和加购建议。"]
-        ],
-        rows: [
-          ["核销高，差评多", "履约承接不足", "限制核销时段，先控体验"],
-          ["咨询高，核销低", "可用时间不清", "标题和详情页突出错峰"],
-          ["加购低", "加购品制作慢或不顺手", "改饮品/凉菜等低压力品"],
-          ["复购低", "只靠低价套餐", "加社区会员券和工作日晚市券"]
-        ]
+        exposure: "9400",
+        interest: "310",
+        redeem: "86",
+        upsell: "18"
       }
     };
 
-    const ids = ["storeType", "location", "offer", "problem", "hypothesis", "diagnosis", "packageFix", "redeemFix", "reviewLogic", "contentTitle", "contentBody"];
-    const setText = (id, value) => {
-      const node = document.getElementById(id);
-      if ("value" in node) node.value = value;
-      else node.textContent = value;
+    const formIds = ["storeType", "location", "offer", "problem", "exposure", "interest", "redeem", "upsell"];
+    let activeCase = "coffee";
+    let loadingTimer = null;
+
+    const text = (id, value) => {
+      document.getElementById(id).textContent = value;
     };
 
-    function renderCase(key) {
-      const data = cases[key];
-      setText("storeType", data.storeType);
-      setText("location", data.location);
-      setText("offer", data.offer);
-      setText("problem", data.problem);
-      setText("exposure", data.metrics[0]);
-      setText("interest", data.metrics[1]);
-      setText("redeem", data.metrics[2]);
-      setText("upsell", data.metrics[3]);
-      setText("hypothesis", data.hypothesis);
-      setText("diagnosis", data.diagnosis);
-      setText("packageFix", data.packageFix);
-      setText("redeemFix", data.redeemFix);
-      setText("reviewLogic", data.reviewLogic);
-      setText("decisionAction", data.decision.action);
-      setText("decisionReason", data.decision.reason);
-      setText("decisionTest", data.decision.test);
-      setText("contentTitle", "标题：" + data.title);
-      setText("contentBody", data.body);
+    const numeric = value => {
+      const parsed = Number(String(value || "").replace(/[^\d.]/g, ""));
+      return Number.isFinite(parsed) ? parsed : 0;
+    };
 
-      document.getElementById("shots").innerHTML = data.shots.map(([time, text]) => `<div class="shot"><b>${time}</b><span>${text}</span></div>`).join("");
-      document.getElementById("reviewRows").innerHTML = data.rows.map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
-      document.querySelectorAll(".tab").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.case === key)));
+    const ratio = (part, total) => total > 0 ? part / total : 0;
+    const pct = value => `${Math.round(value * 1000) / 10}%`;
+
+    function readInput() {
+      return Object.fromEntries(formIds.map(id => [id, document.getElementById(id).value.trim()]));
+    }
+
+    function fillForm(data) {
+      formIds.forEach(id => {
+        document.getElementById(id).value = data[id] || "";
+      });
+    }
+
+    function inferCategory(input) {
+      const joined = `${input.storeType} ${input.offer} ${input.problem}`;
+      if (/美甲|美睫|甲|款式/.test(joined)) return "nail";
+      if (/餐|粉|面|饭|小吃|饮品|出餐|排队|高峰/.test(joined)) return "meal";
+      return "coffee";
+    }
+
+    function storeWords(input) {
+      const category = inferCategory(input);
+      if (category === "nail") {
+        return {
+          scene: "试店用户",
+          packageName: "显白体验套餐",
+          addOn: "款式升级券",
+          comment: "显白",
+          title: "这家新店的低价美甲，适合第一次试店吗？",
+          body: "不要只用低价吸引第一次到店。把基础款、升级款和适合手型讲清楚，用户才知道为什么值得预约，也更容易在到店后升单。"
+        };
+      }
+      if (category === "meal") {
+        return {
+          scene: "社区邻居",
+          packageName: "错峰双人套餐",
+          addOn: "晚市加购券",
+          comment: "错峰",
+          title: "这份社区双人套餐，什么时候去体验更好？",
+          body: "套餐能带动核销，但承接压力也要管住。把可用时段、出餐速度和加购小吃说清楚，既能提高到店，也能减少高峰期差评。"
+        };
+      }
+      return {
+        scene: "学生和附近上班族",
+        packageName: "2 人搭子套餐",
+        addOn: "下次到店券",
+        comment: "搭子",
+        title: "这份小红书低价套餐，怎么改才不只吸引一次性用户？",
+        body: "单人低价套餐容易只解决第一次尝试。把它改成适合朋友一起到店的组合，再加一个下次可用的小券，会更容易带动加购和复购。"
+      };
+    }
+
+    function diagnose(input) {
+      const exposure = numeric(input.exposure);
+      const interest = numeric(input.interest);
+      const redeem = numeric(input.redeem);
+      const upsell = numeric(input.upsell);
+      const redeemRate = ratio(redeem, exposure);
+      const interestRate = ratio(interest, exposure);
+      const upsellRate = ratio(upsell, redeem);
+      const pressureText = /高峰|排队|出餐|承接|差评/.test(`${input.offer} ${input.problem}`);
+
+      if (pressureText || (redeem >= 70 && upsellRate < 0.28)) {
+        return {
+          type: "capacity",
+          label: "承接压力高",
+          action: "先限时段再继续投",
+          mainReason: "套餐能带动核销，但如果高峰承接跟不上，继续放量会把流量变成差评。",
+          metricFocus: "核销时段、等位、出餐速度、差评和加购",
+          review: "核销高不一定继续加投；先看履约压力和差评，再决定是否放量。"
+        };
+      }
+      if (exposure >= 3000 && redeemRate < 0.008) {
+        return {
+          type: "lowRedeem",
+          label: "曝光高，核销低",
+          action: "改套餐利益点后小额继续投",
+          mainReason: "曝光说明内容被看到，但核销弱，优先检查标题、套餐利益点和到店理由是否足够明确。",
+          metricFocus: "核销率、评论咨询、到店距离信息",
+          review: "不要只看曝光；先看收藏咨询是否能转成核销，再判断是不是套餐表达问题。"
+        };
+      }
+      if (interestRate >= 0.025 && redeemRate < 0.02) {
+        return {
+          type: "highInterest",
+          label: "收藏咨询高，核销低",
+          action: "补限时券和评论区引导",
+          mainReason: "用户有兴趣但没有行动，通常卡在可用时间、到店路径、预约方式或优惠临门一脚。",
+          metricFocus: "评论咨询、私信、预约转化、限时券领取",
+          review: "内容有需求信号，但需要把行动步骤写清楚。"
+        };
+      }
+      if (redeem > 0 && upsellRate < 0.22) {
+        return {
+          type: "lowUpsell",
+          label: "核销高，加购低",
+          action: "重做加购点和到店话术",
+          mainReason: "用户已经到店，但没有多花钱，说明套餐太满、加购品不顺手，或店员话术不够自然。",
+          metricFocus: "到店加购率、客单价、复购券领取",
+          review: "核销不是终点；如果加购弱，要先改套餐结构和到店承接。"
+        };
+      }
+      return {
+        type: "balanced",
+        label: "数据初步健康",
+        action: "继续小额测试并补复购设计",
+        mainReason: "当前数据没有明显单点异常，下一步重点看用户是否愿意再次到店。",
+        metricFocus: "复购券领取、二次到店、加购率",
+        review: "保持小额测试，别急着扩大预算，先确认复购路径是否成立。"
+      };
+    }
+
+    function generatePlan(input) {
+      const category = inferCategory(input);
+      const words = storeWords(input);
+      const issue = diagnose(input);
+      const exposure = numeric(input.exposure);
+      const interest = numeric(input.interest);
+      const redeem = numeric(input.redeem);
+      const upsell = numeric(input.upsell);
+      const redeemRate = ratio(redeem, exposure);
+      const upsellRate = ratio(upsell, redeem);
+      const storeType = input.storeType || "你的门店";
+      const location = input.location || "门店附近商圈";
+      const offer = input.offer || "当前主推套餐";
+
+      const packageFix = {
+        coffee: `把当前套餐改成“${words.packageName}”：保留低门槛，但增加双人场景、到店加购和${words.addOn}。`,
+        nail: `把当前套餐改成“${words.packageName}”：基础款保留低门槛，首图展示 3 个升级款式，并配${words.addOn}。`,
+        meal: `把当前套餐改成“${words.packageName}”：明确错峰核销时段，保留低压力加购品，并配${words.addOn}。`
+      }[category];
+
+      const redeemFix = {
+        coffee: "到店话术从“核销套餐”改为“今天第二杯/甜品加购更划算，适合带回图书馆或办公室”。",
+        nail: "预约确认时先发款式参考图；到店话术从“要不要升级”改为“你的手型更适合这两种显白方案”。",
+        meal: "详情页和评论区写清错峰可用时间；到店推荐饮品、小吃、凉菜等制作压力低的加购品。"
+      }[category];
+
+      const reasons = [
+        `当前判断：${issue.label}。${issue.mainReason}`,
+        `基础数据：曝光 ${exposure || 0}，咨询/收藏 ${interest || 0}，核销 ${redeem || 0}，到店加购 ${upsell || 0}。`,
+        `核销率约 ${pct(redeemRate)}，到店加购率约 ${redeem ? pct(upsellRate) : "暂无核销，先看咨询和预约"}。`,
+        `本轮先看 ${issue.metricFocus}，不要只用单次 ROI 判断要不要继续投。`
+      ];
+
+      const actions = [
+        `把套餐标题改成“${words.packageName}”，让用户一眼知道适合谁、为什么现在买。`,
+        `评论区固定一句引导：回复“${words.comment}”领取核销提醒和${words.addOn}。`,
+        `让店员按新话术承接 3 天，并记录核销、加购和券领取。`
+      ];
+
+      const rows = {
+        lowRedeem: [
+          ["曝光高，核销低", "标题或套餐利益点不清", "重写钩子，强化到店理由"],
+          ["收藏高，咨询高", "内容有需求但行动弱", "补限时券和评论区引导"],
+          ["核销仍低", "到店成本或可用时间不清", "补距离、营业时间、预约方式"],
+          ["加购弱", "用户只为低价而来", "重做套餐或降低投放"]
+        ],
+        highInterest: [
+          ["咨询高，核销低", "用户有兴趣但没行动", "明确预约路径和限时利益"],
+          ["评论问价格多", "只感知便宜", "增加套餐价值和适用场景"],
+          ["收藏高，私信低", "行动入口不明显", "评论区固定领取方式"],
+          ["核销后无加购", "到店承接弱", "加店员话术和二次券"]
+        ],
+        lowUpsell: [
+          ["核销高，加购低", "套餐太满或话术弱", "改加购品类和店员话术"],
+          ["客单价低", "缺升级理由", "用场景解释为什么值得加购"],
+          ["复购券低", "没有下次到店理由", "发 3 天内可用券"],
+          ["评论少", "内容没有互动口", "增加评论关键词领取"]
+        ],
+        capacity: [
+          ["核销高，差评多", "履约承接不足", "限制核销时段，先控体验"],
+          ["等位变长", "继续放量风险高", "先分流错峰用户"],
+          ["加购低", "加购品制作慢", "改饮品/凉菜等低压力品"],
+          ["出餐慢", "高峰流程不稳", "先优化承接再投放"]
+        ],
+        balanced: [
+          ["数据较均衡", "没有明显单点异常", "继续小额测试"],
+          ["复购未知", "还没验证二次到店", "发下次到店券"],
+          ["加购一般", "升级点不够明确", "补充店员话术"],
+          ["内容可持续", "需要稳定选题", "每周复盘一次选题"]
+        ]
+      }[issue.type];
+
+      const title = category === "coffee"
+        ? `${location}附近，${words.packageName}怎么点更划算？`
+        : words.title;
+
+      return {
+        hint: `经营提醒：${issue.mainReason}`,
+        diagnosis: `${storeType}当前最该先解决的是“${issue.label}”，不是直接加预算或继续降价。`,
+        packageFix,
+        redeemFix,
+        reviewLogic: issue.review,
+        decision: {
+          action: issue.action,
+          reason: `${issue.mainReason} 当前先看 ${issue.metricFocus}。`,
+          test: `用新套餐和新话术试 3 天，重点记录 ${issue.metricFocus}。`
+        },
+        title: `标题：${title}`,
+        body: `${offer} 可以继续保留低门槛，但要把它包装成${words.scene}能理解的具体场景。${words.body} 评论区引导用户回复“${words.comment}”，再发核销提醒和下次到店权益。`,
+        shots: [
+          ["0-3 秒", `先拍门店或套餐第一眼：“${issue.label}时，先别急着加预算。”`],
+          ["3-8 秒", `展示${words.packageName}，明确适合的人群和使用场景。`],
+          ["8-15 秒", `拍到店承接动作：店员推荐${words.addOn}，解释为什么适合。`],
+          ["15-20 秒", `评论区打“${words.comment}”，发核销提醒和下次到店权益。`]
+        ],
+        rows,
+        reasons,
+        actions
+      };
+    }
+
+    async function generateWithAI(input) {
+      return generatePlan(input);
+    }
+
+    function renderPlan(plan) {
+      text("hintText", plan.hint);
+      text("diagnosis", plan.diagnosis);
+      text("packageFix", plan.packageFix);
+      text("redeemFix", plan.redeemFix);
+      text("reviewLogic", plan.reviewLogic);
+      text("decisionAction", plan.decision.action);
+      text("decisionReason", plan.decision.reason);
+      text("decisionTest", plan.decision.test);
+      text("contentTitle", plan.title);
+      text("contentBody", plan.body);
+      document.getElementById("shots").innerHTML = plan.shots.map(([time, shot]) => `<div class="shot"><b>${time}</b><span>${shot}</span></div>`).join("");
+      document.getElementById("reviewRows").innerHTML = plan.rows.map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+      document.getElementById("reasons").innerHTML = plan.reasons.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+      document.getElementById("actions").innerHTML = plan.actions.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+    }
+
+    function setActiveTab(key) {
+      document.querySelectorAll(".tab").forEach(tab => {
+        tab.setAttribute("aria-selected", String(tab.dataset.case === key));
+      });
+    }
+
+    function loadCase(key) {
+      activeCase = key;
+      fillForm(presetCases[key]);
+      setActiveTab(key);
+      renderPlan(generatePlan(readInput()));
+    }
+
+    function runGeneration() {
+      clearTimeout(loadingTimer);
+      const status = document.getElementById("statusText");
+      status.classList.add("is-visible");
+      status.textContent = "正在分析套餐、核销和复购路径...";
+      loadingTimer = setTimeout(async () => {
+        const plan = await generateWithAI(readInput());
+        renderPlan(plan);
+        status.textContent = "诊断已生成，可以先照着试 3 天。";
+        setTimeout(() => status.classList.remove("is-visible"), 1200);
+      }, 420);
     }
 
     document.querySelectorAll(".tab").forEach(tab => {
-      tab.addEventListener("click", () => renderCase(tab.dataset.case));
+      tab.addEventListener("click", () => loadCase(tab.dataset.case));
     });
 
-    renderCase("coffee");
+    document.getElementById("advisorForm").addEventListener("submit", event => {
+      event.preventDefault();
+      setActiveTab("");
+      runGeneration();
+    });
+
+    document.getElementById("resetExample").addEventListener("click", () => loadCase(activeCase || "coffee"));
+
+    loadCase("coffee");
   </script>
 </body>
 </html>
