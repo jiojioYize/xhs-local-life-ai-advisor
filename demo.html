@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小红书本地推 AI 参谋 Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --ink: #17201c;
+      --muted: #69756f;
+      --line: #d9e3dd;
+      --paper: #fbfaf7;
+      --green: #12664f;
+      --green-soft: #e3f4eb;
+      --rose: #e74767;
+      --rose-soft: #ffe7ed;
+      --gold: #a86514;
+      --gold-soft: #fff1d9;
+      --blue: #2c5a8a;
+      --blue-soft: #e6f1fb;
+    }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      padding: 32px 40px 24px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(110deg, rgba(227, 244, 235, 0.9), transparent 56%),
+        linear-gradient(180deg, rgba(255, 231, 237, 0.75), transparent 64%);
+    }
+    .kicker {
+      display: inline-flex;
+      padding: 4px 10px;
+      border: 1px solid rgba(18, 102, 79, 0.25);
+      border-radius: 999px;
+      color: var(--green);
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    h1 {
+      margin: 14px 0 8px;
+      max-width: 980px;
+      font-size: 40px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+    .sub {
+      margin: 0;
+      max-width: 900px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    main {
+      padding: 28px 40px 42px;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 10px 28px rgba(23, 32, 28, 0.06);
+    }
+    .panel h2 {
+      margin: 0;
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: 18px;
+    }
+    .form {
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 14px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 11px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: 14px;
+    }
+    textarea { min-height: 78px; resize: vertical; }
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .hint {
+      padding: 12px;
+      border-radius: 6px;
+      background: var(--green-soft);
+      color: #174f40;
+      font-size: 13px;
+    }
+    .output {
+      display: grid;
+      gap: 16px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card {
+      min-height: 154px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--green);
+      font-size: 15px;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .wide {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+    .script {
+      padding: 18px;
+    }
+    .script h3, .table h3, .workflow h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .script-title {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      border-left: 4px solid var(--rose);
+      border-radius: 6px;
+      background: var(--rose-soft);
+      font-weight: 800;
+    }
+    .shots {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .shot {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 13px;
+    }
+    .shot b { color: var(--green); }
+    .table {
+      padding: 18px;
+      background: var(--gold-soft);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 6px;
+      background: #fff;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid #ead7b7;
+      padding: 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: #67400f;
+      background: #fff8eb;
+    }
+    .workflow {
+      padding: 18px;
+      background: var(--blue-soft);
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 9px;
+    }
+    .step {
+      min-height: 88px;
+      padding: 10px;
+      border: 1px solid rgba(44, 90, 138, 0.22);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 12px;
+    }
+    .step b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--blue);
+      font-size: 13px;
+    }
+    footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 980px) {
+      header, main { padding-left: 18px; padding-right: 18px; }
+      .dashboard, .wide { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="kicker">静态高保真 MVP / 小红书本地生活 / 机会验证</span>
+    <h1>小红书本地推 AI 参谋</h1>
+    <p class="sub">输入店铺和套餐信息，输出一套“套餐诊断 + 内容样片 + 核销提升 + ROI 复盘”的小红书本地获客方案。</p>
+  </header>
+
+  <main>
+    <section class="dashboard">
+      <aside class="panel">
+        <h2>商家输入</h2>
+        <div class="form">
+          <label>店铺类型
+            <input value="校园附近甜品 / 咖啡新店">
+          </label>
+          <label>城市 / 商圈
+            <input value="大学城，距离图书馆步行 6 分钟">
+          </label>
+          <label>主推套餐
+            <textarea>19.9 元单人咖啡甜品套餐：任选中杯拿铁 + 小蛋糕。当前核销低，到店后加购少。</textarea>
+          </label>
+          <label>当前困惑
+            <textarea>想用最小成本引流，但担心低价套餐只吸引薅羊毛用户，不能带来复购。</textarea>
+          </label>
+          <div class="metrics">
+            <label>曝光
+              <input value="8,200">
+            </label>
+            <label>咨询 / 收藏
+              <input value="260">
+            </label>
+            <label>核销
+              <input value="31">
+            </label>
+            <label>到店加购
+              <input value="6">
+            </label>
+          </div>
+          <div class="hint">MVP 假设：商家不是缺一个文案工具，而是缺一套能解释“为什么核销低、下一步改哪里”的经营参谋。</div>
+        </div>
+      </aside>
+
+      <section class="output">
+        <div class="cards">
+          <div class="card">
+            <strong>套餐诊断</strong>
+            <p>单人低价套餐降低了首次决策成本，但缺少同伴场景和加购钩子，容易只带来一次性用户。</p>
+          </div>
+          <div class="card">
+            <strong>套餐改造</strong>
+            <p>改为 2 人分享套餐：饮品 2 杯 + 甜品 1 份 + 到店加购券；降低“只薅一次”的风险。</p>
+          </div>
+          <div class="card">
+            <strong>核销提升</strong>
+            <p>到店话术从“核销套餐”改为“今天第二杯半价，适合带回宿舍/图书馆”。</p>
+          </div>
+          <div class="card">
+            <strong>复盘判断</strong>
+            <p>不要只看核销率；同时看收藏咨询、到店加购、复购券领取，判断是内容问题还是套餐问题。</p>
+          </div>
+        </div>
+
+        <div class="wide">
+          <article class="panel script">
+            <h3>内容样片</h3>
+            <p class="script-title">标题：期末周人均 19.9 的咖啡甜品搭子套餐，真的适合学生党吗？</p>
+            <p><b>正文：</b>图书馆坐一下午最怕又困又饿。我们把单人低价套餐改成了“2 人复习搭子套餐”：两杯低糖咖啡 + 一份小蛋糕，适合下午 3 点一起续命。到店核销后可领第二次复习券，下次带同学来更划算。</p>
+            <div class="shots">
+              <div class="shot"><b>0-3 秒</b><span>镜头扫过图书馆门口：“期末周别再一个人硬撑了。”</span></div>
+              <div class="shot"><b>3-8 秒</b><span>展示 2 杯咖啡和甜品，字幕强调“2 人分享，不是单人薅羊毛价”。</span></div>
+              <div class="shot"><b>8-15 秒</b><span>拍朋友边复习边吃甜品，突出“步行 6 分钟、低糖、不腻”。</span></div>
+              <div class="shot"><b>15-20 秒</b><span>结尾引导：“评论区打‘复习’，发你下次到店券领取方式。”</span></div>
+            </div>
+          </article>
+
+          <article class="panel table">
+            <h3>复盘表</h3>
+            <table>
+              <thead>
+                <tr><th>指标</th><th>看什么</th><th>下一步</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>曝光高，核销低</td><td>标题/套餐利益点不清</td><td>重写钩子，强化到店理由</td></tr>
+                <tr><td>核销高，加购低</td><td>套餐太饱或话术弱</td><td>改加购品类和店员话术</td></tr>
+                <tr><td>收藏高，咨询高</td><td>内容有需求但转化弱</td><td>补充限时券和评论区引导</td></tr>
+                <tr><td>加购和复购券低</td><td>用户只为低价而来</td><td>重做套餐或暂停投放</td></tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+
+        <article class="panel workflow">
+          <h3>Prompt 流程</h3>
+          <div class="steps">
+            <div class="step"><b>1 店铺信息</b>识别品类、商圈、人群和经营目标。</div>
+            <div class="step"><b>2 套餐诊断</b>判断低价、特色、加购和复购设计。</div>
+            <div class="step"><b>3 内容生成</b>输出标题、脚本、镜头和正文。</div>
+            <div class="step"><b>4 核销策略</b>设计到店话术、升级项和二次券。</div>
+            <div class="step"><b>5 ROI 复盘</b>用曝光、咨询、核销、加购综合判断。</div>
+            <div class="step"><b>6 下一步</b>继续投、改套餐、换内容角度或暂停。</div>
+          </div>
+        </article>
+      </section>
+    </section>
+
+    <footer>说明：当前 Demo 是静态高保真 MVP，不连接真实 AI API，不承诺爆单；目标是验证商家是否认可“诊断 + 内容 + 复盘”的工作流价值。</footer>
+  </main>
+</body>
+</html>

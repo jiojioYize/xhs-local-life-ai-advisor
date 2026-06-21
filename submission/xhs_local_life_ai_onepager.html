@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小红书本地生活商家的 AI 机会验证</title>
+  <style>
+    @page { size: A4; margin: 0; }
+    * { box-sizing: border-box; }
+    :root {
+      --ink: #17201c;
+      --muted: #64706a;
+      --line: #d9e1dc;
+      --paper: #fbfaf7;
+      --green: #12664f;
+      --mint: #e3f4eb;
+      --rose: #e74767;
+      --rose-soft: #ffe7ed;
+      --gold: #a86514;
+      --gold-soft: #fff1d9;
+      --blue: #2c5a8a;
+      --blue-soft: #e6f1fb;
+    }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #e7e7e7;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+      line-height: 1.36;
+    }
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      padding: 8mm 10mm 7mm;
+      overflow: hidden;
+      background:
+        linear-gradient(115deg, rgba(227, 244, 235, 0.88), transparent 50%),
+        linear-gradient(180deg, rgba(255, 231, 237, 0.7), transparent 36%),
+        var(--paper);
+    }
+    .top {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 7mm;
+      padding-bottom: 4mm;
+      border-bottom: 1px solid var(--line);
+    }
+    .tag {
+      display: inline-flex;
+      width: fit-content;
+      padding: 3px 9px;
+      border: 1px solid rgba(18, 102, 79, 0.22);
+      border-radius: 999px;
+      color: var(--green);
+      background: rgba(255, 255, 255, 0.72);
+      font-size: 8.3pt;
+      font-weight: 800;
+    }
+    h1 {
+      margin: 2.5mm 0 2mm;
+      font-size: 22pt;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 9.4pt;
+    }
+    .repo {
+      padding: 3.2mm;
+      border: 1px solid rgba(231, 71, 103, 0.26);
+      border-radius: 8px;
+      background: rgba(255, 231, 237, 0.72);
+    }
+    .repo b {
+      display: block;
+      margin-bottom: 1.5mm;
+      color: #9e1732;
+      font-size: 9pt;
+    }
+    .repo .url {
+      display: block;
+      padding: 2.2mm;
+      border-radius: 6px;
+      background: #fff;
+      color: #173b63;
+      font-size: 8.3pt;
+      font-weight: 800;
+      word-break: break-all;
+    }
+    .repo p {
+      margin: 2mm 0 0;
+      font-size: 8.1pt;
+      color: #713047;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 3.2mm;
+      margin-top: 3.7mm;
+    }
+    .section {
+      padding: 3mm;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+    .section h2 {
+      margin: 0 0 2mm;
+      font-size: 11.2pt;
+      line-height: 1.1;
+    }
+    .section p, .section li {
+      font-size: 7.75pt;
+    }
+    .section p { margin: 0 0 1.45mm; }
+    ul { margin: 0; padding-left: 4mm; }
+    li { margin-bottom: 0.8mm; }
+    strong { color: var(--green); font-weight: 900; }
+    .quotes {
+      display: grid;
+      gap: 1.6mm;
+      margin-top: 1.8mm;
+    }
+    .quote {
+      padding: 2mm;
+      border-radius: 6px;
+      background: var(--rose-soft);
+      color: #652035;
+      font-size: 7.55pt;
+      font-weight: 800;
+    }
+    .quote:nth-child(2n) {
+      background: var(--gold-soft);
+      color: #5f3a11;
+    }
+    .mvp {
+      grid-row: span 2;
+      background: rgba(227, 244, 235, 0.88);
+    }
+    .mock {
+      margin-top: 2mm;
+      border: 1px solid rgba(18, 102, 79, 0.18);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .mockbar {
+      display: flex;
+      gap: 4px;
+      padding: 7px 9px;
+      border-bottom: 1px solid var(--line);
+      background: #f6faf8;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #d64d5f; }
+    .dot:nth-child(2) { background: #e9b54b; }
+    .dot:nth-child(3) { background: #54aa70; }
+    .mockbody {
+      display: grid;
+      grid-template-columns: 0.82fr 1.18fr;
+      gap: 2mm;
+      padding: 2.4mm;
+    }
+    .inputbox, .outputbox {
+      padding: 2mm;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 7.2pt;
+    }
+    .inputbox { color: var(--muted); background: #fbfbfa; }
+    .outputbox { background: #fff; }
+    .pill {
+      display: inline-block;
+      margin: 0 0 1mm;
+      padding: 2px 6px;
+      border-radius: 999px;
+      color: var(--green);
+      background: var(--mint);
+      font-size: 6.9pt;
+      font-weight: 800;
+    }
+    .sample {
+      margin-top: 2mm;
+      padding: 2.4mm;
+      border-left: 4px solid var(--rose);
+      border-radius: 6px;
+      background: #fff;
+    }
+    .sample h3 {
+      margin: 0 0 1mm;
+      font-size: 8.8pt;
+    }
+    .sample p {
+      font-size: 7.45pt;
+    }
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.3mm;
+      margin-top: 2mm;
+    }
+    .step {
+      min-height: 14mm;
+      padding: 1.4mm;
+      border: 1px solid rgba(44, 90, 138, 0.18);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 6.7pt;
+    }
+    .step b {
+      display: block;
+      color: var(--blue);
+      font-size: 7pt;
+    }
+    .business { background: var(--blue-soft); }
+    .validation { background: var(--gold-soft); grid-column: span 2; }
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5mm;
+      margin-top: 1.7mm;
+    }
+    .day {
+      padding: 1.6mm;
+      border: 1px solid rgba(168, 101, 20, 0.22);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.76);
+      font-size: 7pt;
+    }
+    .day b {
+      display: block;
+      color: var(--gold);
+      font-size: 7.1pt;
+    }
+    .resources {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2mm;
+      margin-top: 2.2mm;
+    }
+    .res {
+      padding: 1.8mm;
+      border: 1px solid rgba(168, 101, 20, 0.2);
+      border-radius: 6px;
+      background: #fff;
+      font-size: 6.9pt;
+    }
+    .res b { display: block; color: var(--green); font-size: 7.4pt; }
+    .footer {
+      margin-top: 2.5mm;
+      padding-top: 1.5mm;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 6.8pt;
+    }
+    @media print {
+      body { background: #fff; }
+      .page { margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="top">
+      <div>
+        <span class="tag">内容 AI / 小红书本地生活 / 轻量机会验证</span>
+        <h1>小红书本地生活商家的 AI 引流诊断与内容方案助手</h1>
+        <p class="lead">面向本地生活新店和小店，把“套餐怎么设、内容怎么发、核销低怎么办、投放值不值”从经验判断变成可复盘流程。</p>
+      </div>
+      <aside class="repo">
+        <b>附：Public GitHub MVP 仓库</b>
+        <span class="url">https://github.com/jiojioYize/xhs-local-life-ai-advisor</span>
+        <p>仓库内含 Demo 页面、Prompt 流程、样例输出和一页 A4 PDF；评审可直接打开链接查看细节。</p>
+      </aside>
+    </header>
+
+    <section class="grid">
+      <article class="section">
+        <h2>1. 机会判断</h2>
+        <p><strong>目标用户：</strong>小红书本地生活小商家，优先聚焦咖啡、甜品、手作、美甲、轻餐饮、校园/社区周边新店。</p>
+        <ul>
+          <li>商家愿意做小红书获客，但看不懂曝光、ROI、核销、复购之间的关系。</li>
+          <li>低价套餐能带来流量，却容易只吸引一次性用户，不能形成二次消费。</li>
+          <li>真正缺的不是文案，而是<strong>套餐设计 + 内容表达 + 投放复盘</strong>的一体化判断。</li>
+        </ul>
+        <p><strong>为什么现在值得做：</strong>小红书本地生活吸引小商家尝试团购、本地推、探店和种草；AI 适合把零散经营问题转成标准诊断流程。</p>
+      </article>
+
+      <article class="section mvp">
+        <h2>3. MVP 样例：小红书本地推 AI 参谋</h2>
+        <p>已做静态高保真 Demo。输入店铺、商圈、套餐和近 7 天数据，输出套餐诊断、内容样片、核销提升建议和 ROI 复盘表。</p>
+        <div class="mock">
+          <div class="mockbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="mockbody">
+            <div class="inputbox">
+              <span class="pill">商家输入</span><br>
+              校园附近甜品/咖啡新店<br>
+              19.9 元单人咖啡甜品套餐<br>
+              困惑：低价引流但核销低、不复购<br>
+              数据：曝光 8,200 / 核销 31 / 加购 6
+            </div>
+            <div class="outputbox">
+              <span class="pill">AI 输出</span><br>
+              将单人低价套餐改为“2 人复习搭子套餐 + 到店加购 + 复购券”；内容围绕期末复习、朋友拼单、低成本约会；复盘同时看核销、加购和复购券领取。
+            </div>
+          </div>
+        </div>
+        <div class="sample">
+          <h3>内容样片摘录</h3>
+          <p><strong>标题：</strong>期末周人均 19.9 的咖啡甜品搭子套餐，真的适合学生党吗？</p>
+          <p><strong>分镜：</strong>图书馆门口钩子 -> 两杯咖啡和甜品上桌 -> 朋友边复习边吃 -> 店员递复购券并引导评论“复习”。</p>
+        </div>
+        <div class="workflow">
+          <div class="step"><b>1 输入</b>店铺/套餐/数据</div>
+          <div class="step"><b>2 诊断</b>低价/加购/复购</div>
+          <div class="step"><b>3 内容</b>标题/正文/分镜</div>
+          <div class="step"><b>4 核销</b>话术/加购/券</div>
+          <div class="step"><b>5 复盘</b>曝光/核销/加购</div>
+          <div class="step"><b>6 动作</b>继续投/改/停</div>
+        </div>
+      </article>
+
+      <article class="section">
+        <h2>2. 用户证据</h2>
+        <p>基于已收集的小红书截图，痛点集中在引流焦虑、核销焦虑、套餐设计、复购设计与 ROI 判断。</p>
+        <div class="quotes">
+          <div class="quote">“本地推 ROI 很高，但是核销率很低怎么办”</div>
+          <div class="quote">“新店，怎么用最小成本引流”</div>
+          <div class="quote">“团购直播可行吗……感觉核销率很低”</div>
+          <div class="quote">看到短期不赚钱就下架，但低价引流应服务到店、加购和复购。</div>
+        </div>
+        <p style="margin-top:1.8mm;"><strong>洞察：</strong>商家不是没有投放意识，而是不知道如何判断投放质量。</p>
+      </article>
+
+      <article class="section business">
+        <h2>4. 商业判断</h2>
+        <p><strong>付费用户：</strong>愿意为获客投入的小红书本地生活商家，以及服务这些商家的兼职运营/代运营。</p>
+        <p><strong>为什么可能付费：</strong>替代方案包括自己摸索、请人写笔记、达人探店、本地推和代运营。AI 若能减少试错、提高内容产出效率、帮助判断投放是否值得继续，就有付费基础。</p>
+        <p><strong>如何定价：</strong>不先写固定价格，而用 MVP 验证付费方式。先验证单次“套餐诊断 + 内容方案 + 复盘建议”是否愿意付费；若每周都有选题、套餐调整和数据复盘需求，再验证订阅。</p>
+        <p><strong>获客：</strong>以“小红书本地推免费诊断”为钩子，找 3-5 家校园/社区周边新店试用，并发布真实改造案例。</p>
+      </article>
+
+      <article class="section validation">
+        <h2>5. 2 周验证计划与资源投入</h2>
+        <div class="timeline">
+          <div class="day"><b>Day 1-2</b>收集 30 条商家求助内容，按核销低、ROI 不会看、套餐不会设、内容不会做、投流焦虑分类。</div>
+          <div class="day"><b>Day 3-4</b>访谈 5 家本地小店，确认获客方式、成本和最想改善的结果。</div>
+          <div class="day"><b>Day 5-6</b>完善 GitHub Demo、Prompt 流程、样例输出和复盘表。</div>
+          <div class="day"><b>Day 7-10</b>为 3 家真实商家生成方案，观察是否采纳、修改、发布或转发给员工执行。</div>
+          <div class="day"><b>Day 11-14</b>测试付费信号，汇总痛点频次、采纳率、复用意愿和继续付费表达。</div>
+        </div>
+        <div class="resources">
+          <div class="res"><b>人力</b>1 名产品/运营；可选 1 名同学协助视觉。</div>
+          <div class="res"><b>工具</b>小红书账号、GitHub、通用大模型、Figma/Notion、表格。</div>
+          <div class="res"><b>用户资源</b>5 家访谈对象，3 家愿意试用方案的门店。</div>
+          <div class="res"><b>成功标准</b>3 类痛点被验证；3 家中 2 家采纳；1 家表达持续使用或付费意愿。</div>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      边界：不做完整投流平台，不承诺爆单；现阶段以小红书截图观察作为用户证据，不虚构真实访谈数据。MVP 仓库用于展示 Demo 页面、Prompt 流程和完整样例输出。
+    </footer>
+  </main>
+</body>
+</html>
