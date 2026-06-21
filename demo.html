@@ -204,6 +204,35 @@
       gap: 16px;
     }
 
+    .decision {
+      display: grid;
+      grid-template-columns: 180px 1fr 1fr;
+      gap: 12px;
+      padding: 16px 18px;
+      border: 1px solid rgba(18, 102, 79, 0.24);
+      border-radius: 8px;
+      background: var(--green-soft);
+    }
+
+    .decision b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--green);
+      font-size: 13px;
+    }
+
+    .decision strong {
+      display: block;
+      color: var(--ink);
+      font-size: 20px;
+    }
+
+    .decision p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .script {
       padding: 18px;
     }
@@ -310,6 +339,7 @@
       .tabs, .dashboard, .wide { grid-template-columns: 1fr; }
       .cards { grid-template-columns: 1fr 1fr; }
       .steps { grid-template-columns: 1fr 1fr; }
+      .decision { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -369,6 +399,12 @@
           <div class="card"><strong>复盘判断</strong><p id="reviewLogic"></p></div>
         </div>
 
+        <div class="decision">
+          <div><b>建议动作</b><strong id="decisionAction"></strong></div>
+          <div><b>判断依据</b><p id="decisionReason"></p></div>
+          <div><b>下一次测试</b><p id="decisionTest"></p></div>
+        </div>
+
         <div class="wide">
           <article class="panel script">
             <h3>内容样片</h3>
@@ -416,6 +452,11 @@
         packageFix: "改为 2 人复习搭子套餐：饮品 2 杯 + 甜品 1 份 + 到店加购券，降低“只薅一次”的风险。",
         redeemFix: "到店话术从“核销套餐”改为“今天第二杯半价，适合带回宿舍/图书馆”。",
         reviewLogic: "不要只看核销率；同时看收藏咨询、到店加购、复购券领取，判断是内容问题还是套餐问题。",
+        decision: {
+          action: "改套餐后继续小额投",
+          reason: "收藏/咨询仍有需求信号，但核销和加购弱，优先修正套餐利益点和到店承接。",
+          test: "用 2 人复习搭子套餐跑 3 天，重点看核销率、到店加购和复购券领取。"
+        },
         title: "期末周人均 19.9 的咖啡甜品搭子套餐，真的适合学生党吗？",
         body: "图书馆坐一下午最怕又困又饿。我们把单人低价套餐改成了“2 人复习搭子套餐”：两杯低糖咖啡 + 一份小蛋糕，适合下午 3 点一起续命。到店核销后可领第二次复习券，下次带同学来更划算。",
         shots: [
@@ -442,6 +483,11 @@
         packageFix: "改为“通勤显白体验款 + 到店款式升级券”：基础款保留低门槛，首图展示 3 个可升级风格。",
         redeemFix: "预约确认时发送款式选择图；到店话术从“要不要升级”改为“你的手型更适合这两种显白方案”。",
         reviewLogic: "如果预约不少但升单低，优先改款式表达和到店推荐；如果收藏高但预约低，补充可预约时间和距离信息。",
+        decision: {
+          action: "改内容首图和升单路径",
+          reason: "低价体验能带来预约，但用户对升级款价值感知弱，问题更可能在款式表达和到店推荐。",
+          test: "用 3 组显白款式图替换首图，并在预约确认时发送升级券，观察升单率。"
+        },
         title: "商场负一层这家 39.9 美甲，适合第一次试店吗？",
         body: "不是所有低价美甲都只能做最基础的单色。这家把 39.9 做成通勤显白体验款，到店前先看 3 组风格图，喜欢法式、猫眼或碎钻可以用升级券补差价。适合想试新店、但又怕踩雷的人。",
         shots: [
@@ -468,6 +514,11 @@
         packageFix: "改为“错峰双人套餐 + 晚市加购小吃券”：限制核销时段，保护高峰体验。",
         redeemFix: "评论区和详情页明确错峰可用；到店推荐饮品/小吃，不推荐制作慢的菜品。",
         reviewLogic: "核销高不一定继续加投；如果差评、等位、出餐慢同步上升，要先优化承接能力。",
+        decision: {
+          action: "先限时段再继续投",
+          reason: "套餐能带动核销，但承接能力是风险点，继续放量可能带来差评和履约压力。",
+          test: "把核销限定到错峰时段，保留晚市加购券，观察差评、出餐速度和加购。"
+        },
         title: "社区门口 29.9 双人粉面套餐，为什么建议错峰去？",
         body: "这家小店的招牌粉确实适合两个人随便吃一顿，但午高峰排队会影响体验。更推荐下午 2 点后或晚市错峰核销，套餐里有两碗粉和小吃，到店还能用小吃券加一份凉拌菜。",
         shots: [
@@ -507,6 +558,9 @@
       setText("packageFix", data.packageFix);
       setText("redeemFix", data.redeemFix);
       setText("reviewLogic", data.reviewLogic);
+      setText("decisionAction", data.decision.action);
+      setText("decisionReason", data.decision.reason);
+      setText("decisionTest", data.decision.test);
       setText("contentTitle", "标题：" + data.title);
       setText("contentBody", data.body);
 
