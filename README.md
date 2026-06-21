@@ -8,10 +8,9 @@
 - **目标用户**：咖啡、甜品、美甲、轻餐饮等正在尝试小红书团购、本地推、探店和种草的小商家。
 - **核心洞察**：商家缺的不是单篇文案，而是把套餐、内容、核销、加购、复购和投放串起来的判断流程。
 
-## 提交入口
+## 项目材料
 
 - [在线 Demo](https://jiojioyize.github.io/xhs-local-life-ai-advisor/)
-- [A4 PDF](./docs/assets/xhs_local_life_ai_onepager.pdf)
 - [Prompt 流程](./prompt-workflow.md)
 - [样例输出](./sample-output.md)
 - [用户证据整理](./research-notes.md)
