@@ -167,7 +167,7 @@
       gap: 10px;
     }
 
-    .primary, .secondary {
+    .primary, .secondary, .ghost {
       min-height: 42px;
       border-radius: 6px;
       border: 1px solid rgba(18, 102, 79, 0.36);
@@ -185,6 +185,13 @@
     .secondary {
       color: var(--green);
       background: #fff;
+    }
+
+    .ghost {
+      color: var(--muted);
+      background: #fff;
+      border-color: var(--line);
+      font-weight: 700;
     }
 
     .hint {
@@ -212,6 +219,49 @@
     }
 
     .status.is-visible { display: block; }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.1fr 1.6fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .mode, .report-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .mode b, .report-tools b {
+      color: var(--green);
+      font-size: 13px;
+      margin-right: 4px;
+    }
+
+    .mode button, .report-tools button {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mode button[aria-pressed="true"] {
+      border-color: rgba(18, 102, 79, 0.45);
+      color: #fff;
+      background: var(--green);
+    }
 
     .cards {
       display: grid;
@@ -275,11 +325,11 @@
       gap: 16px;
     }
 
-    .script, .table, .reasoning, .todo, .workflow {
+    .script, .table, .reasoning, .todo, .history, .compare, .followup, .variants, .workflow {
       padding: 18px;
     }
 
-    .script h3, .table h3, .reasoning h3, .todo h3, .workflow h3 {
+    .script h3, .table h3, .reasoning h3, .todo h3, .history h3, .compare h3, .followup h3, .variants h3, .workflow h3 {
       margin: 0 0 10px;
       padding: 0;
       border: 0;
@@ -320,6 +370,16 @@
     .bullet { grid-template-columns: 28px 1fr; }
     .shot b, .bullet b { color: var(--green); }
 
+    .editable {
+      outline: 2px solid transparent;
+      transition: outline-color 0.15s ease, background 0.15s ease;
+    }
+
+    .editable:focus {
+      outline-color: rgba(18, 102, 79, 0.2);
+      background: #fff;
+    }
+
     .table { background: var(--gold-soft); }
 
     table {
@@ -345,7 +405,44 @@
 
     .reasoning { background: #fff; }
     .todo { background: var(--green-soft); }
+    .history { background: #fff; }
+    .compare { background: #fff8eb; }
+    .followup { background: #fff; }
+    .variants { background: var(--rose-soft); }
     .workflow { background: var(--blue-soft); }
+
+    .history-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .history-item button {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--green);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .empty {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
     .steps {
       display: grid;
@@ -378,6 +475,7 @@
     @media (max-width: 1080px) {
       header, main { padding-left: 18px; padding-right: 18px; }
       .tabs, .dashboard, .wide { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
       .cards { grid-template-columns: 1fr 1fr; }
       .steps { grid-template-columns: 1fr 1fr; }
       .decision { grid-template-columns: 1fr; }
@@ -444,6 +542,21 @@
       <section class="output">
         <div class="status" id="statusText">正在分析套餐、核销和复购路径...</div>
 
+        <div class="toolbar">
+          <div class="mode" aria-label="生成模式">
+            <b>生成模式</b>
+            <button type="button" class="mode-btn" data-mode="mock" aria-pressed="true">模拟诊断</button>
+            <button type="button" class="mode-btn" data-mode="ai" aria-pressed="false">AI 诊断</button>
+          </div>
+          <div class="report-tools" aria-label="报告操作">
+            <b>报告操作</b>
+            <button type="button" id="copyMarkdown">复制 Markdown</button>
+            <button type="button" id="downloadMarkdown">下载报告</button>
+            <button type="button" id="saveReport">保存记录</button>
+            <button type="button" id="regenerateContent">重写内容样片</button>
+          </div>
+        </div>
+
         <div class="cards">
           <div class="card"><strong>套餐诊断</strong><p id="diagnosis"></p></div>
           <div class="card"><strong>套餐改造</strong><p id="packageFix"></p></div>
@@ -460,8 +573,8 @@
         <div class="wide">
           <article class="panel script">
             <h3>内容样片</h3>
-            <p class="script-title" id="contentTitle"></p>
-            <p class="script-copy" id="contentBody"></p>
+            <p class="script-title editable" id="contentTitle" contenteditable="true"></p>
+            <p class="script-copy editable" id="contentBody" contenteditable="true"></p>
             <div class="shots" id="shots"></div>
           </article>
 
@@ -483,6 +596,30 @@
           <article class="panel todo">
             <h3>今天先做这 3 件事</h3>
             <div class="bullets" id="actions"></div>
+          </article>
+        </div>
+
+        <div class="wide">
+          <article class="panel history">
+            <h3>最近保存的诊断</h3>
+            <div class="history-list" id="historyList"></div>
+          </article>
+
+          <article class="panel compare">
+            <h3>报告对比</h3>
+            <div class="bullets" id="compareView"></div>
+          </article>
+        </div>
+
+        <div class="wide">
+          <article class="panel followup">
+            <h3>3 天后复盘模板</h3>
+            <div class="bullets" id="followupTemplate"></div>
+          </article>
+
+          <article class="panel variants">
+            <h3>小红书笔记角度</h3>
+            <div class="bullets" id="contentVariants"></div>
           </article>
         </div>
 
@@ -540,6 +677,12 @@
     const formIds = ["storeType", "location", "offer", "problem", "exposure", "interest", "redeem", "upsell"];
     let activeCase = "coffee";
     let loadingTimer = null;
+    let currentReport = null;
+    let currentInput = null;
+    let generationMode = "mock";
+    let contentVariantIndex = 0;
+    const historyKey = "xhs-advisor-report-history-v1";
+    const aiEndpoint = "/api/generate-advisor-report";
 
     const text = (id, value) => {
       document.getElementById(id).textContent = value;
@@ -555,6 +698,33 @@
 
     function readInput() {
       return Object.fromEntries(formIds.map(id => [id, document.getElementById(id).value.trim()]));
+    }
+
+    function normalizeReport(report, input) {
+      return {
+        id: report.id || `report-${Date.now()}`,
+        createdAt: report.createdAt || new Date().toISOString(),
+        source: report.source || generationMode,
+        input,
+        hint: report.hint || "经营提醒：先用小范围测试确认核销、加购和复购是否成立。",
+        diagnosis: report.diagnosis || "当前需要先确认问题出在套餐、内容还是到店承接。",
+        packageFix: report.packageFix || "先保留低门槛套餐，再补充加购点和复购权益。",
+        redeemFix: report.redeemFix || "把到店话术、评论区引导和二次券一起设计。",
+        reviewLogic: report.reviewLogic || "不要只看曝光，重点看核销、加购和复购券领取。",
+        decision: {
+          action: report.decision?.action || "先小额测试",
+          reason: report.decision?.reason || "先用 3 天验证主要指标，再决定是否继续投。",
+          test: report.decision?.test || "记录核销、加购和复购券领取。"
+        },
+        title: report.title || "标题：这份套餐怎么改，才不只吸引一次性用户？",
+        body: report.body || "先把套餐适合谁、为什么值得到店、到店后还能得到什么讲清楚，再用评论区引导用户领取权益。",
+        shots: Array.isArray(report.shots) && report.shots.length ? report.shots : [["0-3 秒", "拍套餐第一眼，先说清适合谁。"]],
+        rows: Array.isArray(report.rows) && report.rows.length ? report.rows : [["核销", "看是否到店", "继续小额测试"]],
+        reasons: Array.isArray(report.reasons) && report.reasons.length ? report.reasons : ["先判断当前最明显的经营卡点。"],
+        actions: Array.isArray(report.actions) && report.actions.length ? report.actions : ["把套餐标题、评论区引导和到店话术统一起来。"],
+        followup: Array.isArray(report.followup) && report.followup.length ? report.followup : ["核销数", "到店加购数", "复购券领取数", "差评/等位反馈"],
+        variants: Array.isArray(report.variants) && report.variants.length ? report.variants : ["学生党角度", "附近上班族角度", "低成本约会角度"]
+      };
     }
 
     function fillForm(data) {
@@ -701,6 +871,19 @@
         `让店员按新话术承接 3 天，并记录核销、加购和券领取。`
       ];
 
+      const followup = [
+        "核销数：记录新套餐 3 天内实际到店核销。",
+        "加购数：记录到店后额外购买饮品、小吃、升级款或二次券的人数。",
+        "复购券领取：记录评论区、私信和到店领取下次权益的人数。",
+        category === "meal" ? "承接反馈：记录等位、出餐速度、差评和错峰核销情况。" : "用户反馈：记录评论问题、私信咨询和店员觉得最难承接的话术。"
+      ];
+
+      const variants = [
+        `${words.scene}角度：突出谁适合这个套餐、什么时候来最顺手。`,
+        `低成本试店角度：解释为什么先用低门槛套餐体验，不是单纯薅便宜。`,
+        `朋友同行角度：把单人决策改成两人一起到店、一起加购、一起复购。`
+      ];
+
       const rows = {
         lowRedeem: [
           ["曝光高，核销低", "标题或套餐利益点不清", "重写钩子，强化到店理由"],
@@ -739,6 +922,10 @@
         : words.title;
 
       return {
+        id: `report-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        source: "mock",
+        input,
         hint: `经营提醒：${issue.mainReason}`,
         diagnosis: `${storeType}当前最该先解决的是“${issue.label}”，不是直接加预算或继续降价。`,
         packageFix,
@@ -759,29 +946,68 @@
         ],
         rows,
         reasons,
-        actions
+        actions,
+        followup,
+        variants
       };
     }
 
+    function fetchWithTimeout(url, options, timeout = 12000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
+    }
+
     async function generateWithAI(input) {
-      return generatePlan(input);
+      const fallback = generatePlan(input);
+      if (generationMode !== "ai") return fallback;
+
+      try {
+        const response = await fetchWithTimeout(aiEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ input })
+        });
+        if (!response.ok) throw new Error(`AI 服务暂时不可用：${response.status}`);
+        const payload = await response.json();
+        return normalizeReport({ ...payload.report, source: "ai" }, input);
+      } catch (error) {
+        const status = document.getElementById("statusText");
+        status.classList.add("is-visible");
+        status.textContent = "AI 诊断暂时不可用，已先用模拟诊断生成可执行方案。";
+        return { ...fallback, source: "fallback", aiError: String(error.message || error) };
+      }
     }
 
     function renderPlan(plan) {
-      text("hintText", plan.hint);
-      text("diagnosis", plan.diagnosis);
-      text("packageFix", plan.packageFix);
-      text("redeemFix", plan.redeemFix);
-      text("reviewLogic", plan.reviewLogic);
-      text("decisionAction", plan.decision.action);
-      text("decisionReason", plan.decision.reason);
-      text("decisionTest", plan.decision.test);
-      text("contentTitle", plan.title);
-      text("contentBody", plan.body);
-      document.getElementById("shots").innerHTML = plan.shots.map(([time, shot]) => `<div class="shot"><b>${time}</b><span>${shot}</span></div>`).join("");
-      document.getElementById("reviewRows").innerHTML = plan.rows.map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
-      document.getElementById("reasons").innerHTML = plan.reasons.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
-      document.getElementById("actions").innerHTML = plan.actions.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+      currentReport = normalizeReport(plan, plan.input || readInput());
+      currentInput = currentReport.input;
+      text("hintText", currentReport.hint);
+      text("diagnosis", currentReport.diagnosis);
+      text("packageFix", currentReport.packageFix);
+      text("redeemFix", currentReport.redeemFix);
+      text("reviewLogic", currentReport.reviewLogic);
+      text("decisionAction", currentReport.decision.action);
+      text("decisionReason", currentReport.decision.reason);
+      text("decisionTest", currentReport.decision.test);
+      text("contentTitle", currentReport.title);
+      text("contentBody", currentReport.body);
+      document.getElementById("shots").innerHTML = currentReport.shots.map(([time, shot]) => `<div class="shot"><b>${time}</b><span>${shot}</span></div>`).join("");
+      document.getElementById("reviewRows").innerHTML = currentReport.rows.map(row => `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`).join("");
+      document.getElementById("reasons").innerHTML = currentReport.reasons.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+      document.getElementById("actions").innerHTML = currentReport.actions.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+      document.getElementById("followupTemplate").innerHTML = currentReport.followup.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+      document.getElementById("contentVariants").innerHTML = currentReport.variants.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+      renderHistory();
+      renderCompare();
+    }
+
+    function syncEditsIntoReport() {
+      if (!currentReport) return null;
+      currentReport.title = document.getElementById("contentTitle").textContent.trim();
+      currentReport.body = document.getElementById("contentBody").textContent.trim();
+      currentReport.input = readInput();
+      return currentReport;
     }
 
     function setActiveTab(key) {
@@ -790,23 +1016,183 @@
       });
     }
 
+    function reportToMarkdown(report) {
+      const r = syncEditsIntoReport() || report;
+      const input = r.input || {};
+      const lines = [
+        `# ${input.storeType || "门店"} 小红书本地推诊断报告`,
+        "",
+        `生成时间：${new Date(r.createdAt).toLocaleString("zh-CN")}`,
+        `生成方式：${r.source === "ai" ? "AI 诊断" : r.source === "fallback" ? "模拟诊断（AI 回退）" : "模拟诊断"}`,
+        "",
+        "## 门店信息",
+        `- 店铺类型：${input.storeType || ""}`,
+        `- 城市/商圈：${input.location || ""}`,
+        `- 主推套餐：${input.offer || ""}`,
+        `- 当前困惑：${input.problem || ""}`,
+        `- 曝光/咨询/核销/加购：${input.exposure || 0} / ${input.interest || 0} / ${input.redeem || 0} / ${input.upsell || 0}`,
+        "",
+        "## 诊断结论",
+        `- 套餐诊断：${r.diagnosis}`,
+        `- 套餐改造：${r.packageFix}`,
+        `- 核销提升：${r.redeemFix}`,
+        `- 现在该看什么：${r.reviewLogic}`,
+        "",
+        "## 下一步决策",
+        `- 建议动作：${r.decision.action}`,
+        `- 判断依据：${r.decision.reason}`,
+        `- 下一次测试：${r.decision.test}`,
+        "",
+        "## 内容样片",
+        r.title,
+        "",
+        r.body,
+        "",
+        "## 镜头脚本",
+        ...r.shots.map(([time, shot]) => `- ${time}：${shot}`),
+        "",
+        "## 今天先做这 3 件事",
+        ...r.actions.map((item, index) => `${index + 1}. ${item}`),
+        "",
+        "## 3 天后复盘",
+        ...r.followup.map((item, index) => `${index + 1}. ${item}`)
+      ];
+      return lines.join("\n");
+    }
+
+    async function copyMarkdown() {
+      const markdown = reportToMarkdown(currentReport);
+      try {
+        await navigator.clipboard.writeText(markdown);
+        showStatus("Markdown 已复制，可以直接发给店员或保存。");
+      } catch {
+        const temp = document.createElement("textarea");
+        temp.value = markdown;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+        showStatus("Markdown 已复制，可以直接发给店员或保存。");
+      }
+    }
+
+    function downloadMarkdown() {
+      const markdown = reportToMarkdown(currentReport);
+      const name = (readInput().storeType || "xhs-advisor-report").replace(/[\\/:*?"<>|]/g, "-").slice(0, 28);
+      const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${name}-诊断报告.md`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showStatus("报告已下载为 Markdown 文件。");
+    }
+
+    function getHistory() {
+      try {
+        return JSON.parse(localStorage.getItem(historyKey) || "[]");
+      } catch {
+        return [];
+      }
+    }
+
+    function setHistory(items) {
+      localStorage.setItem(historyKey, JSON.stringify(items.slice(0, 5)));
+    }
+
+    function saveCurrentReport() {
+      const report = syncEditsIntoReport();
+      if (!report) return;
+      const history = getHistory().filter(item => item.id !== report.id);
+      setHistory([{ ...report, savedAt: new Date().toISOString() }, ...history]);
+      renderHistory();
+      renderCompare();
+      showStatus("已保存到本地历史，最多保留最近 5 份。");
+    }
+
+    function renderHistory() {
+      const history = getHistory();
+      const list = document.getElementById("historyList");
+      if (!history.length) {
+        list.innerHTML = `<p class="empty">还没有保存记录。生成报告后点击“保存记录”，下次刷新页面也能找回。</p>`;
+        return;
+      }
+      list.innerHTML = history.map(item => {
+        const input = item.input || {};
+        const time = new Date(item.savedAt || item.createdAt).toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+        return `<div class="history-item"><span><b>${input.storeType || "门店报告"}</b><br>${time} · ${item.decision?.action || "待复盘"}</span><button type="button" data-load="${item.id}">打开</button></div>`;
+      }).join("");
+      list.querySelectorAll("button[data-load]").forEach(button => {
+        button.addEventListener("click", () => {
+          const report = getHistory().find(item => item.id === button.dataset.load);
+          if (!report) return;
+          fillForm(report.input || {});
+          setActiveTab("");
+          renderPlan(report);
+          showStatus("已打开历史报告，可以继续编辑或导出。");
+        });
+      });
+    }
+
+    function renderCompare() {
+      const history = getHistory();
+      const view = document.getElementById("compareView");
+      if (!currentReport || !history.length) {
+        view.innerHTML = `<p class="empty">保存至少 1 份历史报告后，这里会对比当前方案和上次方案。</p>`;
+        return;
+      }
+      const previous = history.find(item => item.id !== currentReport.id) || history[0];
+      if (!previous) {
+        view.innerHTML = `<p class="empty">暂无可对比方案。</p>`;
+        return;
+      }
+      const items = [
+        `当前动作：${currentReport.decision.action}`,
+        `对比方案：${previous.decision?.action || "暂无动作"}`,
+        `当前套餐方向：${currentReport.packageFix}`,
+        `上次套餐方向：${previous.packageFix || "暂无记录"}`
+      ];
+      view.innerHTML = items.map((item, index) => `<div class="bullet"><b>${index + 1}</b><span>${item}</span></div>`).join("");
+    }
+
+    function showStatus(message) {
+      const status = document.getElementById("statusText");
+      status.classList.add("is-visible");
+      status.textContent = message;
+      clearTimeout(loadingTimer);
+      loadingTimer = setTimeout(() => status.classList.remove("is-visible"), 1500);
+    }
+
+    function regenerateContent() {
+      if (!currentReport) return;
+      contentVariantIndex += 1;
+      const variant = currentReport.variants[contentVariantIndex % currentReport.variants.length] || "换一个角度重新讲套餐价值。";
+      currentReport.title = `标题：${variant.replace(/：.*/, "")}，这份套餐怎么拍更容易到店？`;
+      currentReport.body = `${variant} 这次内容不要只讲便宜，要把适合的人群、到店理由和下次权益连起来。评论区继续保留领取关键词，方便把收藏和咨询转成核销。`;
+      renderPlan(currentReport);
+      showStatus("已重写内容样片，诊断和复盘判断保持不变。");
+    }
+
     function loadCase(key) {
       activeCase = key;
       fillForm(presetCases[key]);
       setActiveTab(key);
-      renderPlan(generatePlan(readInput()));
+      renderPlan({ ...generatePlan(readInput()), source: "mock" });
     }
 
     function runGeneration() {
       clearTimeout(loadingTimer);
       const status = document.getElementById("statusText");
       status.classList.add("is-visible");
-      status.textContent = "正在分析套餐、核销和复购路径...";
+      status.textContent = generationMode === "ai" ? "正在请求 AI 诊断，若失败会自动生成模拟方案..." : "正在分析套餐、核销和复购路径...";
       loadingTimer = setTimeout(async () => {
         const plan = await generateWithAI(readInput());
         renderPlan(plan);
-        status.textContent = "诊断已生成，可以先照着试 3 天。";
-        setTimeout(() => status.classList.remove("is-visible"), 1200);
+        status.textContent = plan.source === "ai" ? "AI 诊断已生成，可以先照着试 3 天。" : "诊断已生成，可以先照着试 3 天。";
+        loadingTimer = setTimeout(() => status.classList.remove("is-visible"), 1200);
       }, 420);
     }
 
@@ -821,8 +1207,22 @@
     });
 
     document.getElementById("resetExample").addEventListener("click", () => loadCase(activeCase || "coffee"));
+    document.getElementById("copyMarkdown").addEventListener("click", copyMarkdown);
+    document.getElementById("downloadMarkdown").addEventListener("click", downloadMarkdown);
+    document.getElementById("saveReport").addEventListener("click", saveCurrentReport);
+    document.getElementById("regenerateContent").addEventListener("click", regenerateContent);
+
+    document.querySelectorAll(".mode-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        generationMode = button.dataset.mode;
+        document.querySelectorAll(".mode-btn").forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+        showStatus(generationMode === "ai" ? "已切换到 AI 诊断；如果服务不可用会自动回退。" : "已切换到模拟诊断，全部在浏览器本地完成。");
+      });
+    });
 
     loadCase("coffee");
+    renderHistory();
+    renderCompare();
   </script>
 </body>
 </html>
