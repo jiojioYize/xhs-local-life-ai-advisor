@@ -4,71 +4,17 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type"
 };
 
-const schema = {
-  type: "object",
-  additionalProperties: false,
-  required: [
-    "hint",
-    "diagnosis",
-    "packageFix",
-    "redeemFix",
-    "reviewLogic",
-    "decision",
-    "title",
-    "body",
-    "shots",
-    "rows",
-    "reasons",
-    "actions",
-    "followup",
-    "variants"
-  ],
-  properties: {
-    hint: { type: "string" },
-    diagnosis: { type: "string" },
-    packageFix: { type: "string" },
-    redeemFix: { type: "string" },
-    reviewLogic: { type: "string" },
-    decision: {
-      type: "object",
-      additionalProperties: false,
-      required: ["action", "reason", "test"],
-      properties: {
-        action: { type: "string" },
-        reason: { type: "string" },
-        test: { type: "string" }
-      }
-    },
-    title: { type: "string" },
-    body: { type: "string" },
-    shots: {
-      type: "array",
-      minItems: 4,
-      maxItems: 4,
-      items: {
-        type: "array",
-        minItems: 2,
-        maxItems: 2,
-        items: { type: "string" }
-      }
-    },
-    rows: {
-      type: "array",
-      minItems: 4,
-      maxItems: 4,
-      items: {
-        type: "array",
-        minItems: 3,
-        maxItems: 3,
-        items: { type: "string" }
-      }
-    },
-    reasons: { type: "array", minItems: 3, maxItems: 5, items: { type: "string" } },
-    actions: { type: "array", minItems: 3, maxItems: 3, items: { type: "string" } },
-    followup: { type: "array", minItems: 4, maxItems: 4, items: { type: "string" } },
-    variants: { type: "array", minItems: 3, maxItems: 3, items: { type: "string" } }
-  }
-};
+const requiredStringFields = [
+  "hint",
+  "diagnosis",
+  "packageFix",
+  "redeemFix",
+  "reviewLogic",
+  "title",
+  "body"
+];
+
+const requiredListFields = ["reasons", "actions", "followup", "variants"];
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -77,63 +23,95 @@ function json(data, status = 200) {
   });
 }
 
-function extractText(response) {
-  if (response.output_text) return response.output_text;
-  const chunks = [];
-  for (const item of response.output || []) {
-    for (const content of item.content || []) {
-      if (content.type === "output_text" && content.text) chunks.push(content.text);
-    }
+function parseModelJson(content) {
+  if (typeof content !== "string" || !content.trim()) return null;
+  try {
+    return JSON.parse(content);
+  } catch {
+    return null;
   }
-  return chunks.join("\n");
+}
+
+function isStringList(value, minItems = 1) {
+  return Array.isArray(value) && value.length >= minItems && value.every(item => typeof item === "string" && item.trim());
+}
+
+function isStringTupleList(value, tupleSize, minItems = 1) {
+  return Array.isArray(value) &&
+    value.length >= minItems &&
+    value.every(row => Array.isArray(row) && row.length === tupleSize && row.every(item => typeof item === "string" && item.trim()));
+}
+
+function isValidReport(report) {
+  if (!report || typeof report !== "object" || Array.isArray(report)) return false;
+  if (!requiredStringFields.every(field => typeof report[field] === "string" && report[field].trim())) return false;
+  if (!report.decision || typeof report.decision !== "object") return false;
+  if (!["action", "reason", "test"].every(field => typeof report.decision[field] === "string" && report.decision[field].trim())) return false;
+  if (!isStringTupleList(report.shots, 2, 4)) return false;
+  if (!isStringTupleList(report.rows, 3, 4)) return false;
+  if (!requiredListFields.every(field => isStringList(report[field], field === "actions" || field === "variants" ? 3 : 1))) return false;
+  return true;
 }
 
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
     if (request.method !== "POST") return json({ error: "method_not_allowed" }, 405);
-    if (!env.OPENAI_API_KEY) return json({ error: "missing_openai_api_key" }, 500);
+    if (!env.DEEPSEEK_API_KEY) return json({ error: "missing_deepseek_api_key" }, 500);
 
     const body = await request.json().catch(() => null);
     const input = body?.input;
     if (!input || typeof input !== "object") return json({ error: "invalid_input" }, 400);
 
-    const prompt = [
-      "你是小红书本地生活小商家的经营参谋。",
-      "请根据门店信息生成一份可执行诊断报告。",
-      "不要承诺爆单，不要编造真实经营数据，不要只写文案。",
-      "输出必须是中文，并严格符合 JSON schema。",
-      "",
-      `门店信息：${JSON.stringify(input, null, 2)}`
+    const fieldGuide = [
+      "请只返回一个 JSON object，字段必须完整：",
+      "hint, diagnosis, packageFix, redeemFix, reviewLogic, title, body 为字符串。",
+      "decision 为对象，包含 action, reason, test 三个字符串。",
+      "shots 为至少 4 组 [time, text]。",
+      "rows 为至少 4 组 [metric, what, next]。",
+      "reasons, actions, followup, variants 为字符串数组，其中 actions 和 variants 至少 3 项。",
+      "不要输出 Markdown，不要添加 JSON 以外的解释。"
     ].join("\n");
 
-    const openaiResponse = await fetch("https://api.openai.com/v1/responses", {
+    const deepseekResponse = await fetch("https://api.deepseek.com/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${env.OPENAI_API_KEY}`,
+        "Authorization": ["Bearer", env.DEEPSEEK_API_KEY].join(" "),
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: env.OPENAI_MODEL || "gpt-5.1",
-        input: prompt,
-        text: {
-          format: {
-            type: "json_schema",
-            name: "advisor_report",
-            strict: true,
-            schema
+        model: env.DEEPSEEK_MODEL || "deepseek-chat",
+        messages: [
+          {
+            role: "system",
+            content: "你是小红书本地生活小商家的经营参谋。只输出 JSON，不要输出 Markdown，不要承诺爆单，不要编造真实经营数据。"
+          },
+          {
+            role: "user",
+            content: [
+              "根据以下门店信息生成诊断报告：",
+              JSON.stringify(input, null, 2),
+              "",
+              fieldGuide
+            ].join("\n")
           }
-        }
+        ],
+        response_format: { type: "json_object" },
+        stream: false
       })
     });
 
-    if (!openaiResponse.ok) {
-      return json({ error: "openai_request_failed", status: openaiResponse.status }, 502);
+    if (!deepseekResponse.ok) {
+      return json({ error: "deepseek_request_failed" }, 502);
     }
 
-    const result = await openaiResponse.json();
-    const text = extractText(result);
-    const report = JSON.parse(text);
+    const result = await deepseekResponse.json().catch(() => null);
+    const content = result?.choices?.[0]?.message?.content;
+    const report = parseModelJson(content);
+    if (!isValidReport(report)) {
+      return json({ error: "invalid_model_output" }, 502);
+    }
+
     return json({ report });
   }
 };
