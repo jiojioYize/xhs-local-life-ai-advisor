@@ -66,6 +66,42 @@
 
     main { padding: 24px 40px 42px; }
 
+    .step-nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .step-link {
+      min-height: 58px;
+      padding: 11px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .step-link[aria-current="step"] {
+      border-color: rgba(18, 102, 79, 0.42);
+      background: var(--green-soft);
+      box-shadow: 0 8px 22px rgba(18, 102, 79, 0.08);
+    }
+
+    .step-link b {
+      display: block;
+      color: var(--green);
+      font-size: 14px;
+    }
+
+    .step-link span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .tabs {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -222,7 +258,7 @@
 
     .toolbar {
       display: grid;
-      grid-template-columns: 1.1fr 1.6fr;
+      grid-template-columns: 1fr;
       gap: 12px;
       align-items: stretch;
     }
@@ -411,6 +447,70 @@
     .variants { background: var(--rose-soft); }
     .workflow { background: var(--blue-soft); }
 
+    .flow-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    body[data-step="1"] .dashboard {
+      grid-template-columns: minmax(0, 760px);
+      justify-content: center;
+    }
+
+    body[data-step="1"] .output { display: none; }
+
+    body:not([data-step="1"]) .tabs,
+    body:not([data-step="1"]) .dashboard > .panel {
+      display: none;
+    }
+
+    body:not([data-step="1"]) .dashboard {
+      grid-template-columns: 1fr;
+    }
+
+    body[data-step="2"] .script,
+    body[data-step="2"] .table,
+    body[data-step="2"] .todo,
+    body[data-step="2"] .history,
+    body[data-step="2"] .compare,
+    body[data-step="2"] .followup,
+    body[data-step="2"] .variants,
+    body[data-step="2"] .workflow,
+    body[data-step="2"] #regenerateContent,
+    body[data-step="2"] .to-step-4 {
+      display: none;
+    }
+
+    body[data-step="3"] .cards,
+    body[data-step="3"] .decision,
+    body[data-step="3"] .table,
+    body[data-step="3"] .reasoning,
+    body[data-step="3"] .history,
+    body[data-step="3"] .compare,
+    body[data-step="3"] .followup,
+    body[data-step="3"] .workflow,
+    body[data-step="3"] #copyMarkdown,
+    body[data-step="3"] #downloadMarkdown,
+    body[data-step="3"] #saveReport,
+    body[data-step="3"] .to-step-3 {
+      display: none;
+    }
+
+    body[data-step="4"] .toolbar,
+    body[data-step="4"] .cards,
+    body[data-step="4"] .decision,
+    body[data-step="4"] .script,
+    body[data-step="4"] .reasoning,
+    body[data-step="4"] .todo,
+    body[data-step="4"] .variants,
+    body[data-step="4"] .workflow,
+    body[data-step="4"] .to-step-3,
+    body[data-step="4"] .to-step-4 {
+      display: none;
+    }
+
     .history-list {
       display: grid;
       gap: 8px;
@@ -474,7 +574,7 @@
 
     @media (max-width: 1080px) {
       header, main { padding-left: 18px; padding-right: 18px; }
-      .tabs, .dashboard, .wide { grid-template-columns: 1fr; }
+      .step-nav, .tabs, .dashboard, .wide { grid-template-columns: 1fr; }
       .toolbar { grid-template-columns: 1fr; }
       .cards { grid-template-columns: 1fr 1fr; }
       .steps { grid-template-columns: 1fr 1fr; }
@@ -487,7 +587,7 @@
     }
   </style>
 </head>
-<body>
+<body data-step="1">
   <header>
     <span class="kicker">今日诊断 / 小红书本地生活</span>
     <h1>小红书本地推 AI 参谋</h1>
@@ -495,6 +595,13 @@
   </header>
 
   <main>
+    <nav class="step-nav" aria-label="诊断流程步骤">
+      <button class="step-link" type="button" data-step-target="1" aria-current="step"><b>1. 门店信息</b><span>填写场景、数据和生成模式</span></button>
+      <button class="step-link" type="button" data-step-target="2" aria-current="false"><b>2. 诊断报告</b><span>查看结论、依据和报告操作</span></button>
+      <button class="step-link" type="button" data-step-target="3" aria-current="false"><b>3. 执行方案</b><span>编辑内容样片和行动清单</span></button>
+      <button class="step-link" type="button" data-step-target="4" aria-current="false"><b>4. 复盘记录</b><span>保存、对比和 3 天复盘</span></button>
+    </nav>
+
     <nav class="tabs" aria-label="门店场景">
       <button class="tab" data-case="coffee" aria-selected="true"><b>校园咖啡甜品</b><span>核销低、加购少、担心不复购</span></button>
       <button class="tab" data-case="nail" aria-selected="false"><b>美甲新店</b><span>低价体验客多，但复购和升单弱</span></button>
@@ -531,6 +638,11 @@
               <input id="upsell" inputmode="numeric">
             </label>
           </div>
+          <div class="mode" aria-label="生成模式">
+            <b>生成模式</b>
+            <button type="button" class="mode-btn" data-mode="mock" aria-pressed="true">模拟诊断</button>
+            <button type="button" class="mode-btn" data-mode="ai" aria-pressed="false">AI 诊断</button>
+          </div>
           <div class="actions">
             <button class="primary" type="submit">生成诊断</button>
             <button class="secondary" type="button" id="resetExample">恢复示例</button>
@@ -543,11 +655,6 @@
         <div class="status" id="statusText">正在分析套餐、核销和复购路径...</div>
 
         <div class="toolbar">
-          <div class="mode" aria-label="生成模式">
-            <b>生成模式</b>
-            <button type="button" class="mode-btn" data-mode="mock" aria-pressed="true">模拟诊断</button>
-            <button type="button" class="mode-btn" data-mode="ai" aria-pressed="false">AI 诊断</button>
-          </div>
           <div class="report-tools" aria-label="报告操作">
             <b>报告操作</b>
             <button type="button" id="copyMarkdown">复制 Markdown</button>
@@ -568,6 +675,9 @@
           <div><b>建议动作</b><strong id="decisionAction"></strong></div>
           <div><b>判断依据</b><p id="decisionReason"></p></div>
           <div><b>下一次测试</b><p id="decisionTest"></p></div>
+        </div>
+        <div class="flow-actions to-step-3">
+          <button class="primary" type="button" data-step-target="3">去做内容方案</button>
         </div>
 
         <div class="wide">
@@ -621,6 +731,9 @@
             <h3>小红书笔记角度</h3>
             <div class="bullets" id="contentVariants"></div>
           </article>
+        </div>
+        <div class="flow-actions to-step-4">
+          <button class="primary" type="button" data-step-target="4">去做复盘计划</button>
         </div>
 
         <article class="panel workflow">
@@ -679,6 +792,7 @@
     let loadingTimer = null;
     let currentReport = null;
     let currentInput = null;
+    let currentStep = 1;
     let generationMode = "mock";
     let contentVariantIndex = 0;
     const historyKey = "xhs-advisor-report-history-v1";
@@ -731,6 +845,27 @@
       formIds.forEach(id => {
         document.getElementById(id).value = data[id] || "";
       });
+      text("hintText", "选择示例或调整门店信息后，点击“生成诊断”进入报告。");
+    }
+
+    function showStep(step) {
+      const nextStep = Number(step);
+      if (nextStep > 1 && !currentReport) {
+        currentStep = 1;
+        document.body.dataset.step = "1";
+        text("hintText", "请先生成诊断");
+        document.querySelectorAll(".step-link").forEach(link => {
+          link.setAttribute("aria-current", link.dataset.stepTarget === "1" ? "step" : "false");
+        });
+        return false;
+      }
+
+      currentStep = nextStep;
+      document.body.dataset.step = String(nextStep);
+      document.querySelectorAll(".step-link").forEach(link => {
+        link.setAttribute("aria-current", link.dataset.stepTarget === String(nextStep) ? "step" : "false");
+      });
+      return true;
     }
 
     function inferCategory(input) {
@@ -1132,6 +1267,7 @@
           fillForm(report.input || {});
           setActiveTab("");
           renderPlan(report);
+          showStep(2);
           showStatus("已打开历史报告，可以继续编辑或导出。");
         });
       });
@@ -1180,7 +1316,10 @@
       activeCase = key;
       fillForm(presetCases[key]);
       setActiveTab(key);
-      renderPlan({ ...generatePlan(readInput()), source: "mock" });
+      currentReport = null;
+      currentInput = null;
+      showStep(1);
+      renderCompare();
     }
 
     function runGeneration() {
@@ -1191,6 +1330,7 @@
       loadingTimer = setTimeout(async () => {
         const plan = await generateWithAI(readInput());
         renderPlan(plan);
+        showStep(2);
         status.textContent = plan.source === "ai" ? "AI 诊断已生成，可以先照着试 3 天。" : "诊断已生成，可以先照着试 3 天。";
         loadingTimer = setTimeout(() => status.classList.remove("is-visible"), 1200);
       }, 420);
@@ -1212,6 +1352,10 @@
     document.getElementById("saveReport").addEventListener("click", saveCurrentReport);
     document.getElementById("regenerateContent").addEventListener("click", regenerateContent);
 
+    document.querySelectorAll("[data-step-target]").forEach(button => {
+      button.addEventListener("click", () => showStep(button.dataset.stepTarget));
+    });
+
     document.querySelectorAll(".mode-btn").forEach(button => {
       button.addEventListener("click", () => {
         generationMode = button.dataset.mode;
@@ -1220,7 +1364,9 @@
       });
     });
 
-    loadCase("coffee");
+    fillForm(presetCases.coffee);
+    setActiveTab("coffee");
+    showStep(1);
     renderHistory();
     renderCompare();
   </script>
