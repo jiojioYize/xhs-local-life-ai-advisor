@@ -10,16 +10,13 @@
 
 ## 项目材料
 
-- [在线 Demo](https://jiojioyize.github.io/xhs-local-life-ai-advisor/)
+- [在线 Demo（可交互原型）](https://jiojioyize.github.io/xhs-local-life-ai-advisor/)
+- [40 秒路演演示视频](./docs/assets/advisor-demo-video-optimized.mp4)
 - [Prompt 流程](./prompt-workflow.md)
 - [样例输出](./sample-output.md)
 - [用户证据整理](./research-notes.md)
 - [两周验证计划](./validation-plan.md)
 - [Serverless AI 代理示例](./worker/README.md)
-
-[![Demo video preview](./docs/assets/advisor-demo-cover-optimized.png)](./docs/assets/advisor-demo-video-optimized.mp4)
-
-[点击播放 40 秒 Demo 视频](./docs/assets/advisor-demo-video-optimized.mp4)
 
 ## 四步式 Demo
 
