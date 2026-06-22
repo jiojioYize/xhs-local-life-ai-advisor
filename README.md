@@ -17,9 +17,9 @@
 - [两周验证计划](./validation-plan.md)
 - [Serverless AI 代理示例](./worker/README.md)
 
-<video src="./docs/assets/advisor-demo-video-optimized.mp4" controls muted playsinline>
-  Demo video: ./docs/assets/advisor-demo-video-optimized.mp4
-</video>
+[![Demo video preview](./docs/assets/advisor-demo-cover-optimized.png)](./docs/assets/advisor-demo-video-optimized.mp4)
+
+[点击播放 40 秒 Demo 视频](./docs/assets/advisor-demo-video-optimized.mp4)
 
 ## 四步式 Demo
 
